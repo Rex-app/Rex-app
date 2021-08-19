@@ -9,7 +9,7 @@ const SplashScreen = () => {
   return (
     <StyledContainer>
       <InnerContainer>
-        <PageLogo resizeMode="cover" source={require('../assets/rexLogoV3Stripes.png')}/>
+        <PageLogo resizeMode="cover" source={require('../assets/rexLogoLinesWide.png')}/>
       </InnerContainer>
     </StyledContainer>
   );
