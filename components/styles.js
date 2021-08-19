@@ -25,3 +25,35 @@ export const PageLogo = styled.Image`
   width: 100%;
   height: 700px;
 `
+export const CameraScreen = styled.Image`
+  width: 100%;
+  height: 65%;
+  `
+export const CameraButton = styled.Image``
+
+  export const PlayButton = styled.Image``
+
+ export const ExternalButtonContainer = styled.View`
+    position: relative;
+    flexWrap: wrap;`
+
+  
+  export const InstructionButton = styled.Image`
+    width: 300px;
+    height: 50px;
+    margin-top: 50px;
+    margin-left: 50px;
+    zIndex: 1;
+    align-content: center;
+    `
+    export const ButtonContainer = styled.View`
+      flexDirection: row;
+      margin-top: 35px;
+      justify-content: space-around;
+   `
+
+{/*     flexDirection: row;
+    justify-content: space-around;
+    alignContent: space-around;
+     width: 100%;
+    height: 100%;*/}
