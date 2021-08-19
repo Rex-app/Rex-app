@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "rexapp",
+    "slug": "rexapp",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "rexapp"
+}
