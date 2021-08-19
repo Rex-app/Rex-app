@@ -1,4 +1,5 @@
 import config from "../secret";
+import Constants from 'expo-constants';
 
 const {
   FIREBASE_API_KEY,
@@ -31,7 +32,7 @@ const environments = {
 
 
 function getReleaseChannel() {
-  let releaseChannel = Expo.Constants.manifest.releaseChannel;
+  let releaseChannel = Constants.manifest.releaseChannel;
   if (releaseChannel === undefined) {
     return 'staging';
   } else if (releaseChannel === 'staging') {
