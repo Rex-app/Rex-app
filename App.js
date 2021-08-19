@@ -3,15 +3,12 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import CameraComponent from "./CameraComponent";
 
+import MainScreen from './screens/MainScreen'
+import SplashScreen from './screens/SplashScreen'
+
 export default function App() {
-  return <CameraComponent />;
+  return (
+    <MainScreen />
+  );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
