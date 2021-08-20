@@ -8,26 +8,32 @@ import {
   InstructionButton,
   ExternalButtonContainer,
 } from "../components/styles";
-import { Text } from 'react-native';
+import { Text, Image } from 'react-native';
+import CameraComponent from '../CameraComponent';
 
 const MainScreen = () => {
   return (
     <StyledContainer>
-      <CameraScreen
+      {/* <CameraScreen
         resizeMode="cover"
         source={require("../assets/pillbottleCameraScreen.png")}
-      />
+      /> */}
+      <CameraComponent />
       <ExternalButtonContainer>
         <ButtonContainer>
-        <CameraButton source={require("../assets/Camerabutton.png")} />
-        <PlayButton source={require("../assets/playButton.png")} />
+        <CameraButton>
+        <Image source={require("../assets/Camerabutton.png")} />
+        </CameraButton>
+        <PlayButton>
+         <Image source={require("../assets/playButton.png")} />
+         </PlayButton>
         </ButtonContainer>
-        <InstructionButton
-          source={require("../assets/InstructionsButton.png")}
-        />
+        <InstructionButton>
+          <Image source={require("../assets/InstructionsButton.png")} />
+          </InstructionButton>
       </ExternalButtonContainer>
- 
-     
+
+
       {/* Styling: three containers arranged in column
 Column 1: photo/camera screen
 Column 2: camera and play button icons in row

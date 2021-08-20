@@ -1,6 +1,7 @@
 import styled from 'styled-components';
-import { View, Image} from 'react-native';
+import { View, Image } from 'react-native';
 import { Dimensions } from 'react-native';
+import { TouchableOpacity } from 'react'
 
 export const Colors = {
   green: "#50A561",
@@ -29,16 +30,16 @@ export const CameraScreen = styled.Image`
   width: 100%;
   height: 65%;
   `
-export const CameraButton = styled.Image``
+export const CameraButton = styled.TouchableOpacity``
 
-  export const PlayButton = styled.Image``
+  export const PlayButton = styled.TouchableOpacity``
 
  export const ExternalButtonContainer = styled.View`
     position: relative;
     flexWrap: wrap;`
 
-  
-  export const InstructionButton = styled.Image`
+
+  export const InstructionButton = styled.TouchableOpacity`
     width: 300px;
     height: 50px;
     margin-top: 50px;
