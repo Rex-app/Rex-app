@@ -53,4 +53,4 @@ buck-out/
 .expo/
 web-build/
 
-secret.js
+secrets.js
