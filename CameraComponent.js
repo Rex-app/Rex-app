@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import uuid from "uuid";
 import firebase from "./config/firebase";
+import Environment from "./config/environments"
 
 console.disableYellowBox = true;
 
@@ -183,7 +184,6 @@ export default class CameraComponent extends React.Component {
       if (!pickerResult.cancelled) {
 
         let uploadUrl = await uploadImageAsync(pickerResult.uri);
-        console.log("pickerResult.uri", pickerResult.uri)
         this.setState({ image: uploadUrl });
       }
     } catch (e) {
@@ -193,7 +193,7 @@ export default class CameraComponent extends React.Component {
       this.setState({ uploading: false });
     }
   };
-}
+
 
 submitToGoogle = async () => {
   try {
@@ -244,7 +244,7 @@ submitToGoogle = async () => {
     console.log(error);
   }
 };
-
+}
 
 async function uploadImageAsync(uri) {
   // Why are we using XMLHttpRequest? See:
