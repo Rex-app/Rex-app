@@ -54,3 +54,4 @@ buck-out/
 web-build/
 
 secrets.js
+functions/permissions.json
