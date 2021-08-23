@@ -1,4 +1,4 @@
-import config from "../secret";
+import config from "../secrets";
 import Constants from 'expo-constants';
 
 const {

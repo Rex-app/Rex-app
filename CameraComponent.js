@@ -1,27 +1,29 @@
-import React from 'react';
+import React from "react";
 import {
   ActivityIndicator,
   Button,
   Clipboard,
+  FlatList,
   Image,
   Share,
   StatusBar,
   StyleSheet,
   Text,
   View,
-} from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
-import uuid from 'uuid';
+} from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
+import uuid from "uuid";
 import firebase from "./config/firebase";
+import Environment from "./config/environments"
 
-console.disableYellowBox = true;
-
+// console.disableYellowBox = true;
 
 export default class CameraComponent extends React.Component {
   state = {
     image: null,
     uploading: false,
+    googleResponse: null,
   };
 
   async componentDidMount() {
@@ -33,15 +35,16 @@ export default class CameraComponent extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         {image ? null : (
           <Text
             style={{
               fontSize: 20,
               marginBottom: 20,
-              textAlign: 'center',
+              textAlign: "center",
               marginHorizontal: 15,
-            }}>
+            }}
+          >
             Example: Upload ImagePicker result
           </Text>
         )}
@@ -52,10 +55,16 @@ export default class CameraComponent extends React.Component {
         />
 
         <Button onPress={this._takePhoto} title="Take a photo" />
-
+        {this.state.googleResponse && (
+          <FlatList
+            data={this.state.googleResponse.responses[0].labelAnnotations}
+            extraData={this.state}
+            keyExtractor={this._keyExtractor}
+            renderItem={({ item }) => <Text>Item: {item.description}</Text>}
+          />
+        )}
         {this._maybeRenderImage()}
         {this._maybeRenderUploadingOverlay()}
-
         <StatusBar barStyle="default" />
       </View>
     );
@@ -68,11 +77,12 @@ export default class CameraComponent extends React.Component {
           style={[
             StyleSheet.absoluteFill,
             {
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              alignItems: 'center',
-              justifyContent: 'center',
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
             },
-          ]}>
+          ]}
+        >
           <ActivityIndicator color="#fff" animating size="large" />
         </View>
       );
@@ -80,7 +90,7 @@ export default class CameraComponent extends React.Component {
   };
 
   _maybeRenderImage = () => {
-    let { image } = this.state;
+    let { image, googleResponse } = this.state;
     if (!image) {
       return;
     }
@@ -92,41 +102,61 @@ export default class CameraComponent extends React.Component {
           width: 250,
           borderRadius: 3,
           elevation: 2,
-        }}>
+        }}
+      >
+        <Button
+          style={{ marginBottom: 10 }}
+          onPress={() => this.submitToGoogle()}
+          title="Analyze!"
+        />
+
         <View
           style={{
             borderTopRightRadius: 3,
             borderTopLeftRadius: 3,
-            shadowColor: 'rgba(0,0,0,1)',
+            shadowColor: "rgba(0,0,0,1)",
             shadowOpacity: 0.2,
             shadowOffset: { width: 4, height: 4 },
             shadowRadius: 5,
-            overflow: 'hidden',
-          }}>
+            overflow: "hidden",
+          }}
+        >
           <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
         </View>
 
         <Text
           onPress={this._copyToClipboard}
           onLongPress={this._share}
-          style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
+          style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+        >
           {image}
         </Text>
+        <Text>Raw JSON:</Text>
+
+        {googleResponse && (
+          <Text
+            onPress={this._copyToClipboard}
+            onLongPress={this._share}
+            style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+          >
+            {JSON.stringify(googleResponse.responses)}
+          </Text>
+        )}
       </View>
     );
   };
 
   _share = () => {
     Share.share({
-      message: this.state.image,
-      title: 'Check out this photo',
+      message: JSON.stringify(this.state.googleResponse.responses),
+      title: "Check out this photo",
       url: this.state.image,
     });
   };
 
   _copyToClipboard = () => {
     Clipboard.setString(this.state.image);
-    alert('Copied image URL to clipboard');
+    alert("Copied image URL to clipboard");
   };
 
   _takePhoto = async () => {
@@ -147,19 +177,71 @@ export default class CameraComponent extends React.Component {
     this._handleImagePicked(pickerResult);
   };
 
-  _handleImagePicked = async pickerResult => {
+  _handleImagePicked = async (pickerResult) => {
     try {
       this.setState({ uploading: true });
 
       if (!pickerResult.cancelled) {
-        uploadUrl = await uploadImageAsync(pickerResult.uri);
+
+        let uploadUrl = await uploadImageAsync(pickerResult.uri);
         this.setState({ image: uploadUrl });
       }
     } catch (e) {
       console.log(e);
-      alert('Upload failed, sorry :(');
+      alert("Upload failed, sorry :(");
     } finally {
       this.setState({ uploading: false });
+    }
+  };
+
+
+  submitToGoogle = async () => {
+    try {
+      this.setState({ uploading: true });
+      let { image } = this.state;
+      let body = JSON.stringify({
+        requests: [
+          {
+            features: [
+              // { type: "LABEL_DETECTION", maxResults: 10 },
+              // { type: "LANDMARK_DETECTION", maxResults: 5 },
+              // { type: "FACE_DETECTION", maxResults: 5 },
+              // { type: "LOGO_DETECTION", maxResults: 5 },
+              { type: "TEXT_DETECTION", maxResults: 5 },
+              // { type: "DOCUMENT_TEXT_DETECTION", maxResults: 5 },
+              // { type: "SAFE_SEARCH_DETECTION", maxResults: 5 },
+              // { type: "IMAGE_PROPERTIES", maxResults: 5 },
+              // { type: "CROP_HINTS", maxResults: 5 },
+              // { type: "WEB_DETECTION", maxResults: 5 }
+            ],
+            image: {
+              source: {
+                imageUri: image
+              }
+            }
+          }
+        ]
+      });
+      let response = await fetch(
+        "https://vision.googleapis.com/v1/images:annotate?key=" +
+        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          method: "POST",
+          body: body
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      this.setState({
+        googleResponse: responseJson,
+        uploading: false
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 }
@@ -174,17 +256,14 @@ async function uploadImageAsync(uri) {
     };
     xhr.onerror = function (e) {
       console.log(e);
-      reject(new TypeError('Network request failed'));
+      reject(new TypeError("Network request failed"));
     };
-    xhr.responseType = 'blob';
-    xhr.open('GET', uri, true);
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
     xhr.send(null);
   });
 
-  const ref = firebase
-    .storage()
-    .ref()
-    .child(uuid.v4());
+  const ref = firebase.storage().ref().child(uuid.v4());
   const snapshot = await ref.put(blob);
 
   // We're done with the blob, close and release it
