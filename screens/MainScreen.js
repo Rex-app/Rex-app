@@ -1,47 +1,56 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyledContainer,
-  CameraScreen,
-  CameraButton,
-  PlayButton,
-  ButtonContainer,
-  InstructionButton,
-  ExternalButtonContainer,
-} from "../components/styles";
+import * as ImagePicker from "expo-image-picker";
+import { Camera } from "expo-camera";
+import Environment from "../config/environments";
+import firebase from "../config/firebase";
+import React, { useEffect, useState } from "react";
+import uuid from "uuid";
+import { Pressable } from "react-native";
 
+// Native component imports
 import {
-  Text,
-  Image,
   ActivityIndicator,
   Button,
-  Clipboard,
   FlatList,
-  Share,
+  Image,
   StatusBar,
   StyleSheet,
+  Text,
   View,
 } from "react-native";
-import CameraComponent from "../CameraComponent";
-import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
-import uuid from "uuid";
-import firebase from "../config/firebase";
-import Environment from "../config/environments";
+
+// Styled component imports
+import {
+  ButtonContainer,
+  ExternalButtonContainer,
+  InstructionButton,
+  StyledContainer,
+} from "../components/styles";
 
 const MainScreen = () => {
-  // react hooks: const[statename, state change func name]= State's default value
+  // React Hooks Notes:
+  //const[stateName, stateChangeFunctionName]= State'sDefaultValue
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [googleResponse, setGoogleResponse] = useState(null);
 
-  useEffect(async () => {
-    await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    await Permissions.askAsync(Permissions.CAMERA);
-  });
-  let currentImage = image;
+  /*
+    useEffect Notes:
+    useEffect() take two parameters a function and an a dependency array
+    See: https://stackoverflow.com/questions/58495238/getting-error-after-i-put-async-function-in-useeffect
+        for more info about the function parameter
+    See: https://reactjs.org/docs/hooks-effect.html for more info about the
+        dependency array parameter
+  */
+  useEffect(() => {
+    (async () => {
+      await Camera.requestPermissionsAsync();
+    })();
+  }, []);
+
+  const _keyExtractor = (item, index) => item.id;
 
   const _maybeRenderUploadingOverlay = () => {
-    if (this.state.uploading) {
+    if (uploading) {
       return (
         <View
           style={[
@@ -60,25 +69,23 @@ const MainScreen = () => {
   };
 
   const _maybeRenderImage = () => {
-    let currentImage = image;
-    let currGoogleResponse = googleResponse;
-    if (!currentImage) {
+    if (!image) {
       return;
     }
 
     return (
       <View
         style={{
-          marginTop: 30,
-          width: 250,
           borderRadius: 3,
           elevation: 2,
+          marginTop: 30,
+          width: 250,
         }}
       >
         <Button
           style={{ marginBottom: 10 }}
           onPress={() => submitToGoogle()}
-          title="Analyze!"
+          title="Submit!"
         />
 
         <View
@@ -93,101 +100,25 @@ const MainScreen = () => {
           }}
         >
           <Image
-            source={{ uri: currentImage }}
+            source={{ uri: image }}
             style={{ width: 250, height: 250 }}
           />
         </View>
 
         <Text>Raw JSON:</Text>
 
-        {currGoogleResponse && (
+        {googleResponse && (
           <Text style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
-            {JSON.stringify(currGoogleResponse.responses)}
+            {JSON.stringify(googleResponse.responses)}
           </Text>
         )}
       </View>
     );
   };
 
-  const _takePhoto = async () => {
-    let pickerResult = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
-
-    _handleImagePicked(pickerResult);
-  };
-
-  const _handleImagePicked = async (pickerResult) => {
-    //WE STOPPED HERE
-    try {
-      this.setState({ uploading: true });
-
-      if (!pickerResult.cancelled) {
-        let uploadUrl = await uploadImageAsync(pickerResult.uri);
-        this.setState({ image: uploadUrl });
-      }
-    } catch (e) {
-      console.log(e);
-      alert("Upload failed, sorry :(");
-    } finally {
-      this.setState({ uploading: false });
-    }
-  };
-
-  const submitToGoogle = async () => {
-    try {
-      this.setState({ uploading: true });
-      let { image } = this.state;
-      let body = JSON.stringify({
-        requests: [
-          {
-            features: [
-              // { type: "LABEL_DETECTION", maxResults: 10 },
-              // { type: "LANDMARK_DETECTION", maxResults: 5 },
-              // { type: "FACE_DETECTION", maxResults: 5 },
-              // { type: "LOGO_DETECTION", maxResults: 5 },
-              { type: "TEXT_DETECTION", maxResults: 5 },
-              // { type: "DOCUMENT_TEXT_DETECTION", maxResults: 5 },
-              // { type: "SAFE_SEARCH_DETECTION", maxResults: 5 },
-              // { type: "IMAGE_PROPERTIES", maxResults: 5 },
-              // { type: "CROP_HINTS", maxResults: 5 },
-              // { type: "WEB_DETECTION", maxResults: 5 }
-            ],
-            image: {
-              source: {
-                imageUri: image,
-              },
-            },
-          },
-        ],
-      });
-      let response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=" +
-          Environment["GOOGLE_CLOUD_VISION_API_KEY"],
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: body,
-        }
-      );
-      let responseJson = await response.json();
-      console.log(responseJson);
-      this.setState({
-        googleResponse: responseJson,
-        uploading: false,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  async function uploadImageAsync(uri) {
-    // Why are we using XMLHttpRequest? See:
-    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+  const uploadImageAsync = async (uri) => {
+    // XMLHttpRequest Notes:
+    // See: https://github.com/expo/expo/issues/2402#issuecomment-443726662
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -205,22 +136,86 @@ const MainScreen = () => {
     const ref = firebase.storage().ref().child(uuid.v4());
     const snapshot = await ref.put(blob);
 
-    // We're done with the blob, close and release it
+    // Done with blob; close and release it
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
   }
 
+  const _handleImagePicked = async (pickerResult) => {
+    //WE STOPPED HERE
+    try {
+      setUploading(true);
+      if (!pickerResult.cancelled) {
+        let uploadUrl = await uploadImageAsync(pickerResult.uri);
+        setImage(uploadUrl)
+      }
+    } catch (e) {
+      console.log(e);
+      alert("Upload failed.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const _takePhoto = async () => {
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    _handleImagePicked(pickerResult);
+  };
+
+  const submitToGoogle = async () => {
+    try {
+      setUploading(true);
+      let body = JSON.stringify({
+        requests: [
+          {
+            features: [
+              { type: "TEXT_DETECTION", maxResults: 5 },
+            ],
+            image: {
+              source: {
+                imageUri: image,
+              },
+            },
+          },
+        ],
+      });
+      let response = await fetch(
+        "https://vision.googleapis.com/v1/images:annotate?key=" +
+        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: body,
+        }
+      );
+      let responseJson = await response.json();
+      console.log(responseJson);
+      setGoogleResponse(responseJson);
+      setUploading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <StyledContainer>
+
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         {image ? null : (
           <Text
             style={{
               fontSize: 20,
               marginBottom: 20,
-              textAlign: "center",
               marginHorizontal: 15,
+              textAlign: "center",
             }}
           >
             Example: Upload ImagePicker result
@@ -230,34 +225,36 @@ const MainScreen = () => {
         {googleResponse && (
           <FlatList
             data={googleResponse.responses[0].labelAnnotations}
-            // extraData={this.state}
-            keyExtractor={this._keyExtractor}
+            keyExtractor={_keyExtractor}
             renderItem={({ item }) => <Text>Item: {item.description}</Text>}
           />
         )}
 
-        {this._maybeRenderImage()}
-        {this._maybeRenderUploadingOverlay()}
-        <StatusBar barStyle="default" />
+        {_maybeRenderImage()}
+        {_maybeRenderUploadingOverlay()}
+
       </View>
+
       <ExternalButtonContainer>
+
         <ButtonContainer>
-          <CameraButton onPress={this._takePhoto}>
+          <Pressable onPress={_takePhoto}>
             <Image source={require("../assets/Camerabutton.png")} />
-          </CameraButton>
-          <PlayButton>
+          </Pressable>
+
+          <Pressable>
             <Image source={require("../assets/playButton.png")} />
-          </PlayButton>
+          </Pressable>
         </ButtonContainer>
+
         <InstructionButton>
           <Image source={require("../assets/InstructionsButton.png")} />
         </InstructionButton>
+
       </ExternalButtonContainer>
 
-      {/* Styling: three containers arranged in column
-Column 1: photo/camera screen
-Column 2: camera and play button icons in row
-Column 3: information/replay button  */}
+      <StatusBar barStyle="default" />
+
     </StyledContainer>
   );
 };

@@ -1,15 +1,17 @@
 import React from 'react';
+
+// Styled component imports
 import {
-  StyledContainer,
   InnerContainer,
-  PageLogo
+  PageLogo,
+  StyledContainer,
 } from '../components/styles'
 
 const SplashScreen = () => {
   return (
     <StyledContainer>
       <InnerContainer>
-        <PageLogo resizeMode="cover" source={require('../assets/rexLogoLinesWide.png')}/>
+        <PageLogo resizeMode="cover" source={require('../assets/rexLogoLinesWide.png')} />
       </InnerContainer>
     </StyledContainer>
   );
