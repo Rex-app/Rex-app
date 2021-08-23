@@ -2,6 +2,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera } from "expo-camera";
 import Environment from "../config/environments";
 import firebase from "../config/firebase";
+import * as Speech from 'expo-speech';
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
 import { Pressable } from "react-native";
@@ -84,7 +85,7 @@ const MainScreen = () => {
       >
         <Button
           style={{ marginBottom: 10 }}
-          onPress={() => submitToGoogle()}
+          onPress={() => submitToGoogleVision()}
           title="Submit!"
         />
 
@@ -99,10 +100,7 @@ const MainScreen = () => {
             overflow: "hidden",
           }}
         >
-          <Image
-            source={{ uri: image }}
-            style={{ width: 250, height: 250 }}
-          />
+          <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
         </View>
 
         <Text>Raw JSON:</Text>
@@ -140,7 +138,7 @@ const MainScreen = () => {
     blob.close();
 
     return await snapshot.ref.getDownloadURL();
-  }
+  };
 
   const _handleImagePicked = async (pickerResult) => {
     //WE STOPPED HERE
@@ -148,7 +146,7 @@ const MainScreen = () => {
       setUploading(true);
       if (!pickerResult.cancelled) {
         let uploadUrl = await uploadImageAsync(pickerResult.uri);
-        setImage(uploadUrl)
+        setImage(uploadUrl);
       }
     } catch (e) {
       console.log(e);
@@ -167,15 +165,13 @@ const MainScreen = () => {
     _handleImagePicked(pickerResult);
   };
 
-  const submitToGoogle = async () => {
+  const submitToGoogleVision = async () => {
     try {
       setUploading(true);
       let body = JSON.stringify({
         requests: [
           {
-            features: [
-              { type: "TEXT_DETECTION", maxResults: 5 },
-            ],
+            features: [{ type: "TEXT_DETECTION", maxResults: 5 }],
             image: {
               source: {
                 imageUri: image,
@@ -186,7 +182,7 @@ const MainScreen = () => {
       });
       let response = await fetch(
         "https://vision.googleapis.com/v1/images:annotate?key=" +
-        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
+          Environment["GOOGLE_CLOUD_VISION_API_KEY"],
         {
           headers: {
             Accept: "application/json",
@@ -205,9 +201,14 @@ const MainScreen = () => {
     }
   };
 
+ //needs 'text' variable from JSON body of text from image
+    const speak = () => {
+      const thingToSay = "30 mg Fluoxitine take one tablet by mouth every morning";
+      Speech.speak(thingToSay);
+    };
+  
   return (
     <StyledContainer>
-
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         {image ? null : (
           <Text
@@ -232,17 +233,15 @@ const MainScreen = () => {
 
         {_maybeRenderImage()}
         {_maybeRenderUploadingOverlay()}
-
       </View>
 
       <ExternalButtonContainer>
-
         <ButtonContainer>
           <Pressable onPress={_takePhoto}>
             <Image source={require("../assets/Camerabutton.png")} />
           </Pressable>
 
-          <Pressable>
+          <Pressable onPress={speak}>
             <Image source={require("../assets/playButton.png")} />
           </Pressable>
         </ButtonContainer>
@@ -250,11 +249,9 @@ const MainScreen = () => {
         <InstructionButton>
           <Image source={require("../assets/InstructionsButton.png")} />
         </InstructionButton>
-
       </ExternalButtonContainer>
 
       <StatusBar barStyle="default" />
-
     </StyledContainer>
   );
 };
