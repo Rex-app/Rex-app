@@ -10,8 +10,10 @@ import uuid from "uuid";
 // Native component imports
 import {
   ActivityIndicator,
+  FlatList,
   Image,
   StatusBar,
+  Text,
   View,
 } from "react-native";
 
@@ -58,6 +60,13 @@ const MainScreen = () => {
     }
   };
 
+  const logData = () => {
+    if (googleResponse) {
+      let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
+      console.log(parsedData)
+    }
+  }
+
   const _maybeRenderImage = () => {
     if (!image) {
       return;
@@ -76,6 +85,7 @@ const MainScreen = () => {
         >
           <Image source={require("../assets/submitPhotoButton.png")} />
         </LongButton>
+        {logData()}
       </View>
     );
   };
@@ -159,7 +169,6 @@ const MainScreen = () => {
         }
       );
       let responseJson = await response.json();
-      console.log(responseJson);
       setGoogleResponse(responseJson);
       setUploading(false);
     } catch (error) {
