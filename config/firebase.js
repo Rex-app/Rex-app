@@ -9,7 +9,6 @@ firebase.initializeApp({
   storageBucket: Environment["FIREBASE_STORAGE_BUCKET"],
   messagingSenderId: Environment["FIREBASE_MESSAGING_SENDER_ID"],
   googleCloudVisionAPIKey: Environment["GOOGLE_CLOUD_VISION_API_KEY"],
-  googleTtsAPIKey: Environment["GOOGLE_TTS_API_KEY"],
 });
 
 export default firebase;

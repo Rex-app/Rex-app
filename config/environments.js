@@ -11,7 +11,6 @@ const {
   FIREBASE_APP_ID,
   FIREBASE_MEASUREMENT_ID,
   GOOGLE_CLOUD_VISION_API_KEY,
-  GOOGLE_TTS_API_KEY,
 } = config
 
 const environments = {
@@ -25,7 +24,6 @@ const environments = {
     FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID,
     GOOGLE_CLOUD_VISION_API_KEY,
-    GOOGLE_TTS_API_KEY,
   },
   production: {
     // Warning: This file still gets included in your native binary and  is not a secure way to store secrets if you build for the app stores. Details: https://github.com/expo/expo/issues/83
