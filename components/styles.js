@@ -1,56 +1,77 @@
+import { Image, SafeAreaView, View } from 'react-native';
 import styled from 'styled-components';
-import { View, Image } from 'react-native';
-import { Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react'
 
 // Color scheme
 export const Colors = {
-  green: "#50A561",
   blue: "#5BC0EB",
+  green: "#50A561",
   palePink: "#EAD7D1",
-  purple: "#7871AA",
   pink: "#D58593",
+  purple: "#7871AA",
 }
 
 // Shared Components
-export const StyledContainer = styled.View`
+export const StyledContainer = styled.SafeAreaView`
+  align-items: center;
   flex: 1;
-`
+  justify-content: center;
+  padding: 25px;
+`;
 
 // Main Screen Components
-export const ButtonContainer = styled.View`
-      flexDirection: row;
-      margin-top: 35px;
-      justify-content: space-around;
-   `
-
-export const CameraScreen = styled.Image`
+export const BottomRowBtnContainer = styled.View`
   width: 100%;
-  height: 65%;
-  `
+`;
+
+export const CapturedImageContainer = styled.View`
+  align-items: center;
+  height: 500px;
+  justify-content: center;
+  width: 100%;
+`;
 
 export const ExternalButtonContainer = styled.View`
-    position: relative;
-    flexWrap: wrap;`
+  align-items: center;
+  justify-content: center;
+  padding-top: 50px;
+  width: 100%;
+`;
 
-export const InstructionButton = styled.TouchableOpacity`
-    width: 300px;
-    height: 50px;
-    margin-top: 50px;
-    margin-left: 50px;
-    zIndex: 1;
-    align-content: center;
-    `
+export const InnerContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+`;
+
+
+export const LongButton = styled.TouchableOpacity`
+  margin: 0 auto;
+  padding: 50px 0px;
+  zIndex: 1;
+
+  ${(props) => props.submit && `
+   padding: 10px 0px;
+  `}
+
+`;
+
+export const PlaceHolderImg = styled.Image`
+  height: 400px;
+  max-width: 100%;
+  resize-mode: contain;
+  width: 400px;
+`;
+
+export const TopRowBtnContainer = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%
+`;
 
 // Splash Screen Components
-export const InnerContainer = styled.View`
-  flex: 1;
-  width: 100%;
-  align-items: center;
-  justifyContent: center;
-`
-
 export const PageLogo = styled.Image`
-  width: 100%;
   height: 700px;
-`
+  width: 100%;
+`;
