@@ -25,11 +25,6 @@ export const InnerContainer = styled.View`
   justify-content: center;
 `;
 
-export const PageLogo = styled.Image`
-  width: 100%;
-  height: 700px;
-`;
-
 // Main Screen Components
 export const BottomRowBtnContainer = styled.View`
   width: 100%;
@@ -57,28 +52,7 @@ export const ExternalButtonContainer = styled.View`
   width: 100%;
 `;
 
-export const InnerContainer = styled.View`
-    position: relative;
-    flexWrap: wrap;`
-
-export const InstructionButton = styled.TouchableOpacity`
-    width: 300px;
-    height: 50px;
-    margin-top: 50px;
-    margin-left: 50px;
-    zIndex: 1;
-    align-content: center;
-    `
-
 // Splash Screen Components
-export const InnerContainer = styled.View`
-  flex: 1;
-  width: 100%;
-
-  position: relative;
-  flexwrap: wrap;
-`;
-
 export const InstructionButton = styled.TouchableOpacity`
   width: 300px;
   height: 50px;

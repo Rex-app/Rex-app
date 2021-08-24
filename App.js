@@ -5,5 +5,5 @@ import SplashScreen from "./screens/SplashScreen";
 import Signup from "./screens/Signup"
 
 export default function App() {
-  return <Signup />;
+  return <MainScreen />;
 }
