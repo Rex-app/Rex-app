@@ -10,21 +10,21 @@ import { Pressable } from "react-native";
 // Native component imports
 import {
   ActivityIndicator,
-  Button,
-  FlatList,
   Image,
   StatusBar,
-  StyleSheet,
-  Text,
   View,
 } from "react-native";
 
 // Styled component imports
 import {
-  ButtonContainer,
+  BottomRowBtnContainer,
+  CapturedImageContainer,
   ExternalButtonContainer,
-  InstructionButton,
+  InnerContainer,
+  LongButton,
+  PlaceHolderImg,
   StyledContainer,
+  TopRowBtnContainer,
 } from "../components/styles";
 
 const MainScreen = () => {
@@ -48,22 +48,11 @@ const MainScreen = () => {
     })();
   }, []);
 
-  const _keyExtractor = (item, index) => item.id;
-
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
       return (
-        <View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: "rgba(0,0,0,0.4)",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          ]}
-        >
-          <ActivityIndicator color="#fff" animating size="large" />
+        <View>
+          <ActivityIndicator color="#000" animating size="large" />
         </View>
       );
     }
@@ -75,41 +64,18 @@ const MainScreen = () => {
     }
 
     return (
-      <View
-        style={{
-          borderRadius: 3,
-          elevation: 2,
-          marginTop: 30,
-          width: 250,
-        }}
-      >
-        <Button
-          style={{ marginBottom: 10 }}
+      <View style={{
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 50,
+      }}>
+        <PlaceHolderImg source={{ uri: image }} />
+        <LongButton
+          submit={true}
           onPress={() => submitToGoogleVision()}
-          title="Submit!"
-        />
-
-        <View
-          style={{
-            borderTopRightRadius: 3,
-            borderTopLeftRadius: 3,
-            shadowColor: "rgba(0,0,0,1)",
-            shadowOpacity: 0.2,
-            shadowOffset: { width: 4, height: 4 },
-            shadowRadius: 5,
-            overflow: "hidden",
-          }}
         >
-          <Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
-        </View>
-
-        <Text>Raw JSON:</Text>
-
-        {googleResponse && (
-          <Text style={{ paddingVertical: 10, paddingHorizontal: 10 }}>
-            {JSON.stringify(googleResponse.responses)}
-          </Text>
-        )}
+          <Image source={require("../assets/submitPhotoButton.png")} />
+        </LongButton>
       </View>
     );
   };
@@ -141,7 +107,6 @@ const MainScreen = () => {
   };
 
   const _handleImagePicked = async (pickerResult) => {
-    //WE STOPPED HERE
     try {
       setUploading(true);
       if (!pickerResult.cancelled) {
@@ -182,7 +147,7 @@ const MainScreen = () => {
       });
       let response = await fetch(
         "https://vision.googleapis.com/v1/images:annotate?key=" +
-          Environment["GOOGLE_CLOUD_VISION_API_KEY"],
+        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
         {
           headers: {
             Accept: "application/json",
@@ -201,57 +166,45 @@ const MainScreen = () => {
     }
   };
 
- //needs 'text' variable from JSON body of text from image
-    const speak = () => {
-      const thingToSay = "30 mg Fluoxitine take one tablet by mouth every morning";
-      Speech.speak(thingToSay);
-    };
-  
+  //needs 'text' variable from JSON body of text from image
+  const speak = (thingToSay) => {
+    Speech.speak(thingToSay);
+  };
+
   return (
     <StyledContainer>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        {image ? null : (
-          <Text
-            style={{
-              fontSize: 20,
-              marginBottom: 20,
-              marginHorizontal: 15,
-              textAlign: "center",
-            }}
-          >
-            Example: Upload ImagePicker result
-          </Text>
-        )}
+      <InnerContainer>
+        <CapturedImageContainer>
+          {image ? null : (
+            <PlaceHolderImg source={require("../assets/pillBottle.png")} />
+          )}
 
-        {googleResponse && (
-          <FlatList
-            data={googleResponse.responses[0].labelAnnotations}
-            keyExtractor={_keyExtractor}
-            renderItem={({ item }) => <Text>Item: {item.description}</Text>}
-          />
-        )}
+          {_maybeRenderImage()}
 
-        {_maybeRenderImage()}
-        {_maybeRenderUploadingOverlay()}
-      </View>
+          {_maybeRenderUploadingOverlay()}
+        </CapturedImageContainer>
 
-      <ExternalButtonContainer>
-        <ButtonContainer>
-          <Pressable onPress={_takePhoto}>
-            <Image source={require("../assets/Camerabutton.png")} />
-          </Pressable>
+        <ExternalButtonContainer>
+          <TopRowBtnContainer>
+            <Pressable onPress={_takePhoto}>
+              <Image source={require("../assets/cameraButton.png")} />
+            </Pressable>
 
-          <Pressable onPress={speak}>
-            <Image source={require("../assets/playButton.png")} />
-          </Pressable>
-        </ButtonContainer>
+            <Pressable onPress={() => speak("30 mg Fluoxetine. Take one tablet by mouth every morning.")}>
+              <Image source={require("../assets/playButton.png")} />
+            </Pressable>
+          </TopRowBtnContainer>
 
-        <InstructionButton>
-          <Image source={require("../assets/InstructionsButton.png")} />
-        </InstructionButton>
-      </ExternalButtonContainer>
+          <BottomRowBtnContainer>
+            <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
+              <Image source={require("../assets/instructionsButton.png")} />
+            </LongButton>
+          </BottomRowBtnContainer>
 
-      <StatusBar barStyle="default" />
+        </ExternalButtonContainer>
+
+        <StatusBar barStyle="default" />
+      </InnerContainer>
     </StyledContainer>
   );
 };

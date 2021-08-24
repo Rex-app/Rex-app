@@ -1,19 +1,23 @@
-import styled from "styled-components";
-import { View, Image, Text, TextInput, Pressable } from "react-native";
-import { Dimensions } from "react-native";
-import { TouchableOpacity } from "react";
+import { Dimensions, Image, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
+import styled from 'styled-components';
+import { TouchableOpacity } from 'react'
 
 // Color scheme
 export const Colors = {
-  green: "#50A561",
   blue: "#5BC0EB",
+  green: "#50A561",
   palePink: "#EAD7D1",
-  purple: "#7871AA",
   pink: "#D58593",
-};
+  purple: "#7871AA",
+}
 const { green, blue, palePink, purple, pink } = Colors;
 
 // Shared Components
+export const StyledContainer = styled.SafeAreaView`
+  flex: 1;
+  align-items: center;
+`;
+
 export const InnerContainer = styled.View`
   flex: 1;
   width: 100%;
@@ -26,24 +30,51 @@ export const PageLogo = styled.Image`
   height: 700px;
 `;
 
-export const StyledContainer = styled.View`
-  flex: 1;
-  align-items: center;
+// Main Screen Components
+export const BottomRowBtnContainer = styled.View`
+  width: 100%;
 `;
 
-// Main Screen Components
 export const ButtonContainer = styled.View`
   flexdirection: row;
   margin-top: 35px;
   justify-content: space-around;
 `;
 
-export const CameraScreen = styled.Image`
+
+export const CapturedImageContainer = styled.View`
+  align-items: center;
+  height: 500px;
+  justify-content: center;
   width: 100%;
   height: 65%;
 `;
 
 export const ExternalButtonContainer = styled.View`
+  align-items: center;
+  justify-content: center;
+  padding-top: 50px;
+  width: 100%;
+`;
+
+export const InnerContainer = styled.View`
+    position: relative;
+    flexWrap: wrap;`
+
+export const InstructionButton = styled.TouchableOpacity`
+    width: 300px;
+    height: 50px;
+    margin-top: 50px;
+    margin-left: 50px;
+    zIndex: 1;
+    align-content: center;
+    `
+
+// Splash Screen Components
+export const InnerContainer = styled.View`
+  flex: 1;
+  width: 100%;
+
   position: relative;
   flexwrap: wrap;
 `;
@@ -82,6 +113,7 @@ export const StyledTextInput = styled.TextInput`
   margin-bottom: 10px;
   color: ${purple}
 `;
+
 export const StyledInputLabel = styled.Text`
   color: ${purple}
   font-size: 13px;
@@ -136,8 +168,39 @@ export const ExtraView = styled.View`
   justify-content: center;
   flex-direction: row;
   align-items: center;
-  padding: 10px;
-`
+  padding: 10px
+`;
+
+export const LongButton = styled.TouchableOpacity`
+  margin: 0 auto;
+  padding: 50px 0px;
+  zIndex: 1;
+
+  ${(props) => props.submit && `
+   padding: 10px 0px;
+  `}
+
+`;
+
+export const PlaceHolderImg = styled.Image`
+  height: 400px;
+  max-width: 100%;
+  resize-mode: contain;
+  width: 400px;
+`;
+
+export const TopRowBtnContainer = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%
+`;
+
+// Splash Screen Components
+export const PageLogo = styled.Image`
+  height: 700px;
+  width: 100%;
+`;
 
 export const ExtraText = styled.Text`
   justify-content: center;
