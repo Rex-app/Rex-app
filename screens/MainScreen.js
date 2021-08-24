@@ -1,11 +1,11 @@
 import * as ImagePicker from "expo-image-picker";
+import * as Speech from 'expo-speech';
 import { Camera } from "expo-camera";
 import Environment from "../config/environments";
 import firebase from "../config/firebase";
-import * as Speech from 'expo-speech';
+import { Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
-import { Pressable } from "react-native";
 
 // Native component imports
 import {
@@ -121,6 +121,7 @@ const MainScreen = () => {
     }
   };
 
+  // Note: aspect only works for Android
   const _takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
