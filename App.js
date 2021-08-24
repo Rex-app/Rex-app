@@ -1,12 +1,9 @@
 import React from "react";
-
-// Screen imports
-import MainScreen from './screens/MainScreen'
-import SplashScreen from './screens/SplashScreen'
+import Login from "./screens/Login";
+import MainScreen from "./screens/MainScreen";
+import SplashScreen from "./screens/SplashScreen";
+import Signup from "./screens/Signup"
 
 export default function App() {
-  return (
-    <MainScreen />
-  );
+  return <Signup />;
 }
-
