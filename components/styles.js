@@ -1,4 +1,4 @@
-import { Dimensions, Image, SafeAreaView, View, Text, TextInput, Pressable } from 'react-native';
+import { Dimensions, Image, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
 import styled from 'styled-components';
 import { TouchableOpacity } from 'react'
 
