@@ -57,7 +57,7 @@ export const InstructionButton = styled.TouchableOpacity`
   align-content: center;
 `;
 
-// Login Screen Components
+// Login/Signup Screen Components
 export const SubTitle = styled.Text`
   font-size: 30px;
   margin-bottom: 20px;
@@ -155,3 +155,7 @@ export const TextLinkContent = styled.Text`
   color: ${green};
   font-size: 24px;
 `
+export const SignupPageLogo = styled.Image`
+  width: 100%;
+  height: 200px;
+`;
