@@ -63,8 +63,16 @@ const MainScreen = () => {
   const logData = () => {
     if (googleResponse) {
       let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-      console.log(parsedData)
+      // console.log(parsedData)
+
+      const myRe = /([A-Z]){4,}/g
+      const textArr = parsedData.match(myRe)
+      const textStr = textArr.join(' ')
+      // console.log(textStr)
+      console.log("completed logData")
+      return textStr
     }
+
   }
 
   const _maybeRenderImage = () => {
@@ -85,7 +93,7 @@ const MainScreen = () => {
         >
           <Image source={require("../assets/submitPhotoButton.png")} />
         </LongButton>
-        {logData()}
+        {/* {logData()} */}
       </View>
     );
   };
@@ -190,7 +198,7 @@ const MainScreen = () => {
           )}
 
           {_maybeRenderImage()}
-
+          {/* {const capturedStr = logData()} */}
           {_maybeRenderUploadingOverlay()}
         </CapturedImageContainer>
 
@@ -200,7 +208,7 @@ const MainScreen = () => {
               <Image source={require("../assets/cameraButton.png")} />
             </Pressable>
 
-            <Pressable onPress={() => speak("30 mg Fluoxetine. Take one tablet by mouth every morning.")}>
+            <Pressable onPress={() => speak(logData())}>
               <Image source={require("../assets/playButton.png")} />
             </Pressable>
           </TopRowBtnContainer>
