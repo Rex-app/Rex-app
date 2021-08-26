@@ -8,31 +8,31 @@ import { StatusBar } from "expo-status-bar";
 import ErrorMessage from "../components/ErrorMessage";
 
 import {
-  StyledContainer,
-  SignupPageLogo,
-  SubTitle,
-  StyledFormArea,
-  LeftIcon,
-  StyledInputLabel,
-  StyledTextInput,
-  RightIcon,
-  StyledButton,
   ButtonText,
   Colors,
-  MsgBox,
-  Line,
-  ExtraView,
   ExtraText,
+  ExtraView,
+  LeftIcon,
+  Line,
+  MsgBox,
+  RightIcon,
+  SignupPageLogo,
+  StyledButton,
+  StyledContainer,
+  StyledFormArea,
+  StyledInputLabel,
+  StyledTextInput,
+  SubTitle,
   TextLink,
   TextLinkContent,
 } from "../components/styles";
 
 // Color imports
-const { green, blue, palePink, purple, pink } = Colors;
+const { pink } = Colors;
 
 // Icon imports
-import { MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -46,12 +46,17 @@ const Signup = ({ navigation }) => {
   // Actual DOB to be sent
   const [dob, setDob] = useState();
 
+  // Registers a user based on their email and password values
+  // Values provided by Formik when its onClick is triggered
   const onHandleSignup = async ({ email, password }) => {
     try {
       if (email !== '' && password !== '') {
+        // createUserWithEmailAndPassword() provided by Firebase Auth
         await auth.createUserWithEmailAndPassword(email, password);
       }
     } catch (error) {
+      // Message is human-readable and thrown by the Firebase Auth service
+      // See: https://firebase.google.com/docs/auth/admin/errors for list of errors
       setSignupError(error.message);
     }
   };

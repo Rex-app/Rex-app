@@ -42,7 +42,7 @@ const Login = ({ navigation }) => {
   const [loginError, setLoginError] = useState('');
 
   // Handles whether to log in the user based on their email and password values
-  // Values provided by Formik
+  // Values provided by Formik when its onClick is triggered
   const onLogin = async ({ email, password }) => {
     try {
       if (email !== '' && password !== '') {
