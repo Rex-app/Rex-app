@@ -63,16 +63,19 @@ const MainScreen = () => {
   const logData = () => {
     if (googleResponse) {
       let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-      // console.log(parsedData)
+      fetch("http://192.168.1.169:5000", {
+        method: "post",
+        body: JSON.stringify(googleResponse),
+        headers: { "Content-Type": "application/json" }
+      });
 
+      console.log(parsedData)
       const myRe = /([A-Z]){4,}/g
       const textArr = parsedData.match(myRe)
       const textStr = textArr.join(' ')
-      // console.log(textStr)
-      console.log("completed logData")
+      console.log(textStr)
       return textStr
     }
-
   }
 
   const _maybeRenderImage = () => {
@@ -93,7 +96,6 @@ const MainScreen = () => {
         >
           <Image source={require("../assets/submitPhotoButton.png")} />
         </LongButton>
-        {/* {logData()} */}
       </View>
     );
   };
