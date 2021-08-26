@@ -1,9 +1,7 @@
-import React from "react";
-import Login from "./screens/Login";
-import MainScreen from "./screens/MainScreen";
-import SplashScreen from "./screens/SplashScreen";
-import Signup from "./screens/Signup"
+import React from 'react';
+
+import Routes from './navigation/index';
 
 export default function App() {
-  return <MainScreen />;
+  return <Routes />;
 }

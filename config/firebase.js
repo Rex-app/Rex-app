@@ -1,6 +1,8 @@
 import * as firebase from "firebase";
+import 'firebase/auth';
 import Environment from "./environments";
 
+// Initialize Firebase
 firebase.initializeApp({
   apiKey: Environment["FIREBASE_API_KEY"],
   authDomain: Environment["FIREBASE_AUTH_DOMAIN"],
