@@ -172,7 +172,7 @@ const Signup = ({ navigation }) => {
               Already have an account?
             </ExtraText>
             <TextLink>
-              <TextLinkContent>
+              <TextLinkContent onPress={() => navigation.navigate('Login')}>
                 Log in!
               </TextLinkContent>
             </TextLink>
