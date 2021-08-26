@@ -29,7 +29,7 @@ import {
   TopRowBtnContainer,
 } from "../components/styles";
 
-const MainScreen = () => {
+const MainScreen = ({ navigation }) => {
   // React Hooks Notes:
   //const[stateName, stateChangeFunctionName]= State'sDefaultValue
   const [image, setImage] = useState(null);
@@ -82,7 +82,6 @@ const MainScreen = () => {
     if (!image) {
       return;
     }
-
     return (
       <View style={{
         alignItems: "center",
@@ -218,6 +217,9 @@ const MainScreen = () => {
           <BottomRowBtnContainer>
             <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
               <Image source={require("../assets/instructionsButton.png")} />
+            </LongButton>
+            <LongButton onPress={() => navigation.navigate('Settings')} >
+              <Image source={require("../assets/settingsButton.png")} />
             </LongButton>
           </BottomRowBtnContainer>
 

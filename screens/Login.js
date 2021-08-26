@@ -1,9 +1,11 @@
+import firebase from "../config/firebase";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 
 // Component Imports
+import ErrorMessage from "../components/ErrorMessage";
 import {
   ButtonText,
   Colors,
@@ -14,25 +16,45 @@ import {
   LoginPageLogo,
   MsgBox,
   RightIcon,
-  SubTitle,
   StyledButton,
   StyledContainer,
   StyledFormArea,
   StyledInputLabel,
   StyledTextInput,
+  SubTitle,
   TextLink,
   TextLinkContent,
 } from "../components/styles";
 
+// Color imports
+const { pink } = Colors
 
-const { green, blue, palePink, purple, pink } = Colors
-
-//icons
-import { MaterialIcons } from "@expo/vector-icons"
+// Icon imports
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from "@expo/vector-icons"
 
-const Login = () => {
-  const [hidePassword, setHidePassword] = useState(true)
+// Firebase Auth
+const auth = firebase.auth();
+
+const Login = ({ navigation }) => {
+  // Screen's State
+  const [hidePassword, setHidePassword] = useState(true);
+  const [loginError, setLoginError] = useState('');
+
+  // Handles whether to log in the user based on their email and password values
+  // Values provided by Formik when its onClick is triggered
+  const onLogin = async ({ email, password }) => {
+    try {
+      if (email !== '' && password !== '') {
+        // signInWithEmailAndPassword() is provided by Firebase Auth
+        await auth.signInWithEmailAndPassword(email, password);
+      }
+    } catch (error) {
+      // Message is human-readable and thrown by the Firebase Auth service
+      // See: https://firebase.google.com/docs/auth/admin/errors for list of errors
+      setLoginError(error.message);
+    }
+  };
 
   return (
     <StyledContainer>
@@ -43,10 +65,8 @@ const Login = () => {
       />
       <SubTitle>Account Login</SubTitle>
       <Formik
-        initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        initialValues={{ email: '', password: '' }}
+        onSubmit={onLogin}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (<StyledFormArea>
           <MyTextInput
@@ -73,7 +93,11 @@ const Login = () => {
             hidePassword={hidePassword}
             setHidePassword={setHidePassword}
           />
-          <MsgBox>...</MsgBox>
+
+          <MsgBox>
+            {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+          </MsgBox>
+
           <StyledButton onPress={handleSubmit}>
             <ButtonText>
               Login
@@ -84,7 +108,7 @@ const Login = () => {
             <ExtraText>
               Don't have an account?
             </ExtraText>
-            <TextLink>
+            <TextLink onPress={() => navigation.navigate('Signup')}>
               <TextLinkContent>
                 Sign up!
               </TextLinkContent>
