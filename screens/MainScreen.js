@@ -1,11 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { Camera } from "expo-camera";
-import Environment from "../config/environments";
-import firebase from "../config/firebase";
 import * as Speech from 'expo-speech';
-import React, { useEffect, useState } from "react";
-import uuid from "uuid";
-import { Pressable } from "react-native";
 
 // Native component imports
 import {
@@ -14,7 +8,6 @@ import {
   StatusBar,
   View,
 } from "react-native";
-
 // Styled component imports
 import {
   BottomRowBtnContainer,
@@ -26,6 +19,13 @@ import {
   StyledContainer,
   TopRowBtnContainer,
 } from "../components/styles";
+import React, { useEffect, useState } from "react";
+
+import { Camera } from "expo-camera";
+import Environment from "../config/environments";
+import { Pressable } from "react-native";
+import firebase from "../config/firebase";
+import uuid from "uuid";
 
 const MainScreen = () => {
   // React Hooks Notes:
