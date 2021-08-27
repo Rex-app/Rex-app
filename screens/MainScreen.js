@@ -3,6 +3,7 @@ import * as Speech from 'expo-speech';
 import { Camera } from "expo-camera";
 import Environment from "../config/environments";
 import firebase from "../config/firebase";
+import prescriptionParser from "../dummyDataTesting/dataParsingTests";
 import { Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
@@ -10,10 +11,8 @@ import uuid from "uuid";
 // Native component imports
 import {
   ActivityIndicator,
-  FlatList,
   Image,
   StatusBar,
-  Text,
   View,
 } from "react-native";
 
@@ -62,6 +61,7 @@ const MainScreen = ({ navigation }) => {
 
   const logData = () => {
     if (googleResponse) {
+      let prescriptionData = googleResponse;
       let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
       fetch("http://192.168.1.169:5000", {
         method: "post",
@@ -69,12 +69,12 @@ const MainScreen = ({ navigation }) => {
         headers: { "Content-Type": "application/json" }
       });
 
-      console.log(parsedData)
+      const prescriptionInstructions = prescriptionParser(prescriptionData)
       const myRe = /([A-Z]){4,}/g
-      const textArr = parsedData.match(myRe)
-      const textStr = textArr.join(' ')
-      console.log(textStr)
-      return textStr
+      const textArr = parsedData.match(myRe);
+      const medicationName = textArr.join(' ');
+
+      return medicationName + prescriptionInstructions;
     }
   }
 
@@ -105,6 +105,9 @@ const MainScreen = ({ navigation }) => {
 
     const ref = firebase.storage().ref().child(uuid.v4());
     const snapshot = await ref.put(blob);
+
+    // Done with blob; close and release it
+    blob.close();
 
     return await snapshot.ref.getDownloadURL();
   };
@@ -183,7 +186,6 @@ const MainScreen = ({ navigation }) => {
           )}
 
           {_maybeRenderImage()}
-          {/* {const capturedStr = logData()} */}
           {_maybeRenderUploadingOverlay()}
         </CapturedImageContainer>
 
