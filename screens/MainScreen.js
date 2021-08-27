@@ -10,8 +10,10 @@ import uuid from "uuid";
 // Native component imports
 import {
   ActivityIndicator,
+  FlatList,
   Image,
   StatusBar,
+  Text,
   View,
 } from "react-native";
 
@@ -57,6 +59,24 @@ const MainScreen = ({ navigation }) => {
       );
     }
   };
+
+  const logData = () => {
+    if (googleResponse) {
+      let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
+      fetch("http://192.168.1.169:5000", {
+        method: "post",
+        body: JSON.stringify(googleResponse),
+        headers: { "Content-Type": "application/json" }
+      });
+
+      console.log(parsedData)
+      const myRe = /([A-Z]){4,}/g
+      const textArr = parsedData.match(myRe)
+      const textStr = textArr.join(' ')
+      console.log(textStr)
+      return textStr
+    }
+  }
 
   const _maybeRenderImage = () => {
     if (!image) {
@@ -120,6 +140,7 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
+  // Note: aspect only works for Android
   const _takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -157,7 +178,6 @@ const MainScreen = ({ navigation }) => {
         }
       );
       let responseJson = await response.json();
-      console.log(responseJson);
       setGoogleResponse(responseJson);
       setUploading(false);
     } catch (error) {
@@ -179,7 +199,7 @@ const MainScreen = ({ navigation }) => {
           )}
 
           {_maybeRenderImage()}
-
+          {/* {const capturedStr = logData()} */}
           {_maybeRenderUploadingOverlay()}
         </CapturedImageContainer>
 
@@ -189,7 +209,7 @@ const MainScreen = ({ navigation }) => {
               <Image source={require("../assets/cameraButton.png")} />
             </Pressable>
 
-            <Pressable onPress={() => speak("30 mg Fluoxetine. Take one tablet by mouth every morning.")}>
+            <Pressable onPress={() => speak(logData())}>
               <Image source={require("../assets/playButton.png")} />
             </Pressable>
           </TopRowBtnContainer>
