@@ -3,6 +3,7 @@ import { Formik } from "formik";
 import { Pressable, View } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import KeyboardShiftWrapper from '../components/KeyboardShift';
 
 // Component imports
 import ErrorMessage from "../components/ErrorMessage";
@@ -73,6 +74,7 @@ const Signup = ({ navigation }) => {
   }
 
   return (
+    <KeyboardShiftWrapper>
     <StyledContainer>
       <StatusBar style="dark" />
       <SignupPageLogo
@@ -180,6 +182,7 @@ const Signup = ({ navigation }) => {
         </StyledFormArea>)}
       </Formik>
     </StyledContainer>
+    </KeyboardShiftWrapper>
   );
 };
 

@@ -2,7 +2,8 @@ import firebase from "../config/firebase";
 import { Formik } from "formik";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { View, KeyboardAvoidingView, ScrollView, Keyboard } from "react-native";
+import KeyboardShiftWrapper from '../components/KeyboardShift';
 
 // Component Imports
 import ErrorMessage from "../components/ErrorMessage";
@@ -57,6 +58,7 @@ const Login = ({ navigation }) => {
   };
 
   return (
+    <KeyboardShiftWrapper>
     <StyledContainer>
       <StatusBar style="dark" />
       <LoginPageLogo
@@ -117,6 +119,7 @@ const Login = ({ navigation }) => {
         </StyledFormArea>)}
       </Formik>
     </StyledContainer>
+    </KeyboardShiftWrapper>
   );
 };
 
