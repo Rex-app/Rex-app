@@ -34,6 +34,7 @@ const MainScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [googleResponse, setGoogleResponse] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null)
 
   /*
     useEffect Notes:
@@ -46,13 +47,18 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       await Camera.requestPermissionsAsync();
+      setHasPermission(true)
     })();
   }, []);
 
     //needs 'text' variable from JSON body of text from image
-    const speak = (thingToSay) => {
-      Speech.speak(thingToSay);
-    };
+  const speak = (thingToSay) => {
+    Speech.speak(thingToSay);
+  };
+
+  if (hasPermission === null) {
+    Speech.speak("Please allow app to access camera")
+  }
 
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
@@ -70,7 +76,7 @@ const MainScreen = ({ navigation }) => {
         return "There was an error. Please retake photo."
       } else {
          let prescriptionData = googleResponse;
-          console.log(googleResponse.responses[0])
+          // console.log(googleResponse.responses[0])
           let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
 
           fetch("http://192.168.1.169:5000", {
