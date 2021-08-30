@@ -49,6 +49,11 @@ const MainScreen = ({ navigation }) => {
     })();
   }, []);
 
+    //needs 'text' variable from JSON body of text from image
+    const speak = (thingToSay) => {
+      Speech.speak(thingToSay);
+    };
+
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
       return (
@@ -61,20 +66,32 @@ const MainScreen = ({ navigation }) => {
 
   const logData = () => {
     if (googleResponse) {
-      let prescriptionData = googleResponse;
-      let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-      fetch("http://192.168.1.169:5000", {
-        method: "post",
-        body: JSON.stringify(googleResponse),
-        headers: { "Content-Type": "application/json" }
-      });
+      if (typeof(googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
+        return "There was an error. Please retake photo."
+      } else {
+         let prescriptionData = googleResponse;
+          console.log(googleResponse.responses[0])
+          let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
 
-      const prescriptionInstructions = prescriptionParser(prescriptionData)
-      const myRe = /([A-Z]){4,}/g
-      const textArr = parsedData.match(myRe);
-      const medicationName = textArr.join(' ');
+          fetch("http://192.168.1.169:5000", {
+            method: "post",
+            body: JSON.stringify(googleResponse),
+            headers: { "Content-Type": "application/json" }
+          });
 
-      return medicationName + prescriptionInstructions;
+          const prescriptionInstructions = prescriptionParser(prescriptionData)
+          const myRe = /([A-Z]){4,}/g
+          const textArr = parsedData.match(myRe);
+          const medicationName = textArr.join(' ');
+
+          if (medicationName === undefined) {
+            return "There was an error. Please retake photo."
+          } else {
+            return medicationName + prescriptionInstructions;
+          }
+      }
+    } else {
+      return "There was an error. Please retake photo."
     }
   }
 
@@ -172,10 +189,7 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  //needs 'text' variable from JSON body of text from image
-  const speak = (thingToSay) => {
-    Speech.speak(thingToSay);
-  };
+
 
   return (
     <StyledContainer>
