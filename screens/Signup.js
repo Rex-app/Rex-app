@@ -45,8 +45,6 @@ const auth = firebase.auth();
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [signupError, setSignupError] = useState('');
-  // Actual DOB to be sent
-
 
   // Registers a user based on their email and password values
   // Values provided by Formik when its onClick is triggered
@@ -67,10 +65,8 @@ const Signup = ({ navigation }) => {
     <KeyboardShiftWrapper>
       <StyledContainer>
         <StatusBar style="dark" />
-        <Image
+        <SignupPageLogo
           resizeMode="contain"
-          justifyContent="flex-end"
-          style={{ width: wp('60%'), height: hp('25%') }}
           source={require("../assets/rexSolo.png")}
         />
         <SubTitle>Account Sign-Up</SubTitle>
@@ -80,7 +76,6 @@ const Signup = ({ navigation }) => {
           onSubmit={onHandleSignup}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (<StyledFormArea>
-
             <MyTextInput
               label="Email Address"
               icon="email"
@@ -145,17 +140,14 @@ const Signup = ({ navigation }) => {
   );
 };
 
-const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
+const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
   return (
     <View>
       <LeftIcon>
         <MaterialIcons name={icon} size={30} color={pink} />
       </LeftIcon>
       <StyledInputLabel>{label}</StyledInputLabel>
-      {!isDate && <StyledTextInput {...props} />}
-      {isDate && (<Pressable onPress={showDatePicker}>
-        <StyledTextInput {...props} />
-      </Pressable>)}
+      <StyledTextInput {...props} />
       {isPassword && (
         <RightIcon onPress={() => setHidePassword(!hidePassword)}>
           <Ionicons name={hidePassword ? 'md-eye-off' : 'md-eye'} size={30} color={pink} />

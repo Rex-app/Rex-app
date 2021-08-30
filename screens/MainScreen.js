@@ -40,6 +40,7 @@ const MainScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [googleResponse, setGoogleResponse] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null)
 
   /*
     useEffect Notes:
@@ -52,13 +53,30 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       await Camera.requestPermissionsAsync();
+      setHasPermission(true)
     })();
   }, []);
 
+<<<<<<< HEAD
   //needs 'text' variable from JSON body of text from image
   const speak = (thingToSay) => {
     Speech.speak(thingToSay);
   };
+||||||| c75864f
+    //needs 'text' variable from JSON body of text from image
+    const speak = (thingToSay) => {
+      Speech.speak(thingToSay);
+    };
+=======
+    //needs 'text' variable from JSON body of text from image
+  const speak = (thingToSay) => {
+    Speech.speak(thingToSay);
+  };
+
+  if (hasPermission === null) {
+    Speech.speak("Please allow app to access camera")
+  }
+>>>>>>> main
 
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
@@ -75,6 +93,7 @@ const MainScreen = ({ navigation }) => {
       if (typeof (googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
         return "There was an error. Please retake photo."
       } else {
+<<<<<<< HEAD
         let prescriptionData = googleResponse;
         console.log(googleResponse.responses[0])
         let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
@@ -95,6 +114,49 @@ const MainScreen = ({ navigation }) => {
         } else {
           return medicationName + prescriptionInstructions;
         }
+||||||| c75864f
+         let prescriptionData = googleResponse;
+          console.log(googleResponse.responses[0])
+          let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
+
+          fetch("http://192.168.1.169:5000", {
+            method: "post",
+            body: JSON.stringify(googleResponse),
+            headers: { "Content-Type": "application/json" }
+          });
+
+          const prescriptionInstructions = prescriptionParser(prescriptionData)
+          const myRe = /([A-Z]){4,}/g
+          const textArr = parsedData.match(myRe);
+          const medicationName = textArr.join(' ');
+
+          if (medicationName === undefined) {
+            return "There was an error. Please retake photo."
+          } else {
+            return medicationName + prescriptionInstructions;
+          }
+=======
+         let prescriptionData = googleResponse;
+          // console.log(googleResponse.responses[0])
+          let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
+
+          fetch("http://192.168.1.169:5000", {
+            method: "post",
+            body: JSON.stringify(googleResponse),
+            headers: { "Content-Type": "application/json" }
+          });
+
+          const prescriptionInstructions = prescriptionParser(prescriptionData)
+          const myRe = /([A-Z]){4,}/g
+          const textArr = parsedData.match(myRe);
+          const medicationName = textArr.join(' ');
+
+          if (medicationName === undefined) {
+            return "There was an error. Please retake photo."
+          } else {
+            return medicationName + prescriptionInstructions;
+          }
+>>>>>>> main
       }
     } else {
       return "There was an error. Please retake photo."
