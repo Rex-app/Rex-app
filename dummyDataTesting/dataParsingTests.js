@@ -1,5 +1,5 @@
 // DUMMY DATA
-const fluoxetineDummyData = require("./MetforminDummyData");
+const fluoxetineDummyData = require("./FluoxetineDummyData");
 
 export default function prescriptionParser(prescriptionData) {
   const txtAnnotationsArr = prescriptionData.responses[0].textAnnotations;
