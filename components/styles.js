@@ -147,9 +147,9 @@ export const Line = styled.View`
 
 export const ExtraView = styled.View`
   justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  padding: 10px;
+
 `;
 
 export const LongButton = styled.TouchableOpacity`
