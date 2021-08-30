@@ -1,5 +1,5 @@
 // DUMMY DATA
-const fluoxetineDummyData = require("./MetforminDummyData");
+const fluoxetineDummyData = require("./FluoxetineDummyData");
 
 const txtAnnotationsArr = fluoxetineDummyData.responses[0].textAnnotations;
 

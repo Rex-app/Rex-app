@@ -1,6 +1,14 @@
-import { Dimensions, Image, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
-import styled from 'styled-components';
-import { TouchableOpacity } from 'react'
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  SafeAreaView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import styled from "styled-components/native";
+import { TouchableOpacity } from "react";
 
 // Color scheme
 export const Colors = {
@@ -9,7 +17,7 @@ export const Colors = {
   palePink: "#EAD7D1",
   pink: "#D58593",
   purple: "#7871AA",
-}
+};
 const { green, blue, palePink, purple, pink } = Colors;
 
 // Shared Components
@@ -35,7 +43,6 @@ export const ButtonContainer = styled.View`
   margin-top: 35px;
   justify-content: space-around;
 `;
-
 
 export const CapturedImageContainer = styled.View`
   align-items: center;
@@ -85,7 +92,7 @@ export const StyledTextInput = styled.TextInput`
   height: 60px;
   margin-vertical: 3px;
   margin-bottom: 10px;
-  color: ${purple}
+  color: ${purple};
 `;
 
 export const StyledInputLabel = styled.Text`
@@ -129,31 +136,32 @@ export const LoginPageLogo = styled.Image`
 export const MsgBox = styled.Text`
   text-align: center;
   font-size: 13px;
-`
+`;
 
 export const Line = styled.View`
   height: 1px;
   width: 100%
   background-color: ${green}
   margin-vertical: 10px;
-`
+`;
 
 export const ExtraView = styled.View`
   justify-content: center;
   flex-direction: row;
   align-items: center;
-  padding: 10px
+  padding: 10px;
 `;
 
 export const LongButton = styled.TouchableOpacity`
   margin: 0 auto;
   padding: 50px 0px;
-  zIndex: 1;
+  zindex: 1;
 
-  ${(props) => props.submit && `
+  ${(props) =>
+    props.submit &&
+    `
    padding: 10px 0px;
   `}
-
 `;
 
 export const PlaceHolderImg = styled.Image`
@@ -167,7 +175,7 @@ export const TopRowBtnContainer = styled.View`
   align-items: center;
   flex-direction: row;
   justify-content: space-around;
-  width: 100%
+  width: 100%;
 `;
 
 // Splash Screen Components
@@ -180,18 +188,18 @@ export const ExtraText = styled.Text`
   justify-content: center;
   align-content: center;
   color: ${purple};
-  font-size: 24px
-`
+  font-size: 24px;
+`;
 
 export const TextLink = styled.Pressable`
   justify-content: center;
   align-items: center;
-`
+`;
 
 export const TextLinkContent = styled.Text`
   color: ${green};
   font-size: 24px;
-`
+`;
 export const SignupPageLogo = styled.Image`
   width: 100%;
   height: 200px;
