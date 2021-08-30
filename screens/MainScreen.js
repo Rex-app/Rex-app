@@ -4,7 +4,6 @@ import { Camera } from "expo-camera";
 import Environment from "../config/environments";
 import firebase from "../config/firebase";
 import prescriptionParser from "../dummyDataTesting/dataParsingTests";
-import { Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
 
@@ -18,18 +17,15 @@ import {
 import {
   ActivityIndicator,
   Image,
+  Pressable,
   StatusBar,
   View,
 } from "react-native";
 
 // Styled component imports
 import {
-  BottomRowBtnContainer,
-  CapturedImageContainer,
-  ExternalButtonContainer,
   InnerContainer,
   LongButton,
-  PlaceHolderImg,
   StyledContainer,
   TopRowBtnContainer,
 } from "../components/styles";
@@ -57,7 +53,6 @@ const MainScreen = ({ navigation }) => {
     })();
   }, []);
 
-  //needs 'text' variable from JSON body of text from image
   const speak = (thingToSay) => {
     Speech.speak(thingToSay);
   };
@@ -115,14 +110,21 @@ const MainScreen = ({ navigation }) => {
       <View style={{
         alignItems: "center",
         justifyContent: "center",
-        paddingTop: 50,
       }}>
-        <PlaceHolderImg source={{ uri: image }} />
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          style={{ width: wp('90%'), height: hp('40%') }}
+        />
         <LongButton
           submit={true}
           onPress={() => submitToGoogleVision()}
         >
-          <Image source={require("../assets/submitPhotoButton.png")} />
+          <Image
+            source={require("../assets/submitPhotoButton.png")}
+            resizeMode="contain"
+            style={{ width: wp('90%'), height: hp('8%') }}
+          />
         </LongButton>
       </View>
     );
@@ -201,41 +203,56 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-
-
   return (
     <StyledContainer>
       <InnerContainer>
-        <CapturedImageContainer>
-          {image ? null : (
-            <PlaceHolderImg source={require("../assets/pillBottle.png")} />
-          )}
+        {image ? null : (
+          <Image
+            source={require("../assets/pillBottle.png")}
+            resizeMode="contain"
+            style={{ width: wp('90%'), height: hp('40%') }}
+          />
+        )}
 
-          {_maybeRenderImage()}
-          {_maybeRenderUploadingOverlay()}
-        </CapturedImageContainer>
-
-        <ExternalButtonContainer>
+        {_maybeRenderImage()}
+        {_maybeRenderUploadingOverlay()}
+        <View>
           <TopRowBtnContainer>
             <Pressable onPress={_takePhoto}>
-              <Image source={require("../assets/cameraButton.png")} />
+              <Image
+                source={require("../assets/cameraButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('100%'), height: hp('12%') }}
+              />
             </Pressable>
 
             <Pressable onPress={() => speak(logData())}>
-              <Image source={require("../assets/playButton.png")} />
+              <Image
+                source={require("../assets/playButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('90%'), height: hp('12%') }}
+              />
             </Pressable>
           </TopRowBtnContainer>
 
-          <BottomRowBtnContainer>
+          <View>
             <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
-              <Image source={require("../assets/instructionsButton.png")} />
+              <Image
+                source={require("../assets/instructionsButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('90%'), height: hp('8%') }}
+              />
             </LongButton>
-            <LongButton onPress={() => navigation.navigate('Settings')} >
-              <Image source={require("../assets/settingsButton.png")} />
+            <LongButton onPress={() => navigation.navigate('Settings')}>
+              <Image
+                source={require("../assets/settingsButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('90%'), height: hp('8%') }}
+              />
             </LongButton>
-          </BottomRowBtnContainer>
+          </View>
 
-        </ExternalButtonContainer>
+        </View>
 
         <StatusBar barStyle="default" />
       </InnerContainer>

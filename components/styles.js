@@ -18,56 +18,22 @@ export const Colors = {
   pink: "#D58593",
   purple: "#7871AA",
 };
-const { green, blue, palePink, purple, pink } = Colors;
+const { green, blue, palePink, purple } = Colors;
 
 // Shared Components
 export const StyledContainer = styled.SafeAreaView`
   flex: 1;
   align-items: center;
+  justify-content: center;
 `;
 
 export const InnerContainer = styled.View`
   flex: 1;
-  width: 100%;
   align-items: center;
   justify-content: center;
 `;
 
 // Main Screen Components
-export const BottomRowBtnContainer = styled.View`
-  width: 100%;
-`;
-
-export const ButtonContainer = styled.View`
-  flexdirection: row;
-  margin-top: 35px;
-  justify-content: space-around;
-`;
-
-export const CapturedImageContainer = styled.View`
-  align-items: center;
-  height: 500px;
-  justify-content: center;
-  width: 100%;
-  height: 65%;
-`;
-
-export const ExternalButtonContainer = styled.View`
-  align-items: center;
-  justify-content: center;
-  padding-top: 50px;
-  width: 100%;
-`;
-
-// Splash Screen Components
-export const InstructionButton = styled.TouchableOpacity`
-  width: 300px;
-  height: 50px;
-  margin-top: 50px;
-  margin-left: 50px;
-  z-index: 1;
-  align-content: center;
-`;
 
 // Login/Signup Screen Components
 export const SubTitle = styled.Text`
@@ -154,28 +120,14 @@ export const ExtraView = styled.View`
 
 export const LongButton = styled.TouchableOpacity`
   margin: 0 auto;
-  padding: 50px 0px;
+  padding-top: 15px;
   z-index: 1;
-
-  ${(props) =>
-    props.submit &&
-    `
-   padding: 10px 0px;
-  `}
-`;
-
-export const PlaceHolderImg = styled.Image`
-  height: 400px;
-  max-width: 100%;
-  resize-mode: contain;
-  width: 400px;
 `;
 
 export const TopRowBtnContainer = styled.View`
-  align-items: center;
   flex-direction: row;
   justify-content: space-around;
-  width: 100%;
+  padding-top: 15px;
 `;
 
 // Splash Screen Components

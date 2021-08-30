@@ -17,6 +17,7 @@ import {
   Line,
   MsgBox,
   RightIcon,
+  SignupPageLogo,
   StyledButton,
   StyledContainer,
   StyledFormArea,
@@ -65,8 +66,10 @@ const Signup = ({ navigation }) => {
     <KeyboardShiftWrapper>
       <StyledContainer>
         <StatusBar style="dark" />
-        <SignupPageLogo
+        <Image
           resizeMode="contain"
+          justifyContent="flex-end"
+          style={{ width: wp('60%'), height: hp('25%') }}
           source={require("../assets/rexSolo.png")}
         />
         <SubTitle>Account Sign-Up</SubTitle>
