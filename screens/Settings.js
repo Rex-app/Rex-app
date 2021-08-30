@@ -3,13 +3,14 @@ import firebase from '../config/firebase';
 import React, { useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image } from 'react-native';
+import { MainScreen, Home } from "./MainScreen";
 
 // Styled component imports
 import { LongButton } from "../components/styles";
 
 const auth = firebase.auth();
 
-export default function Settings() {
+export default function Settings({ navigation }) {
   const { user } = useContext(AuthenticatedUserContext);
 
   const handleSignOut = async () => {
@@ -29,6 +30,9 @@ export default function Settings() {
       <Text style={styles.text}>Your UID is: {user.uid} </Text>
       <LongButton onPress={handleSignOut} >
         <Image source={require("../assets/logoutButton.png")} />
+      </LongButton>
+      <LongButton onPress={() => navigation.navigate('Home')} >
+        <Image source={require("../assets/Mainscreen.png")} />
       </LongButton>
     </View>
   );
