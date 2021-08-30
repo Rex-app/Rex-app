@@ -58,7 +58,7 @@ export const InstructionButton = styled.TouchableOpacity`
   height: 50px;
   margin-top: 50px;
   margin-left: 50px;
-  zindex: 1;
+  z-index: 1;
   align-content: center;
 `;
 
@@ -148,7 +148,7 @@ export const ExtraView = styled.View`
 export const LongButton = styled.TouchableOpacity`
   margin: 0 auto;
   padding: 50px 0px;
-  zIndex: 1;
+  z-index: 1;
 
   ${(props) => props.submit && `
    padding: 10px 0px;
