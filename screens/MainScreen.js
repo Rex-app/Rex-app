@@ -66,40 +66,31 @@ const MainScreen = ({ navigation }) => {
 
   const logData = () => {
     if (googleResponse) {
-      let resp1 = [{}]
-      let resp2 = {"responses": resp1}
-
-      if (googleResponse === resp2) {
-        console.log('hi')
+      if (typeof(googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
         return "There was an error. Please retake photo."
       } else {
-        console.log("it was here the whole time")
-        console.log("googleResp", googleResponse)
-        console.log("resp2", resp2)
+         let prescriptionData = googleResponse;
+          console.log(googleResponse.responses[0])
+          let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
+
+          fetch("http://192.168.1.169:5000", {
+            method: "post",
+            body: JSON.stringify(googleResponse),
+            headers: { "Content-Type": "application/json" }
+          });
+
+          const prescriptionInstructions = prescriptionParser(prescriptionData)
+          const myRe = /([A-Z]){4,}/g
+          const textArr = parsedData.match(myRe);
+          const medicationName = textArr.join(' ');
+
+          if (medicationName === undefined) {
+            return "There was an error. Please retake photo."
+          } else {
+            return medicationName + prescriptionInstructions;
+          }
       }
-        // let prescriptionData = googleResponse;
-        // console.log(googleResponse.responses[0])
-        // let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-
-        // fetch("http://192.168.1.169:5000", {
-        //   method: "post",
-        //   body: JSON.stringify(googleResponse),
-        //   headers: { "Content-Type": "application/json" }
-        // });
-
-        // const prescriptionInstructions = prescriptionParser(prescriptionData)
-        // const myRe = /([A-Z]){4,}/g
-        // const textArr = parsedData.match(myRe);
-        // const medicationName = textArr.join(' ');
-
-        // if (medicationName === undefined) {
-        //   return "There was an error. Please retake photo."
-        // } else {
-        //   return medicationName + prescriptionInstructions;
-        // }
-
     } else {
-      console.log('made it here')
       return "There was an error. Please retake photo."
     }
   }
