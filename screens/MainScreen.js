@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import uuid from "uuid";
 
 // Function Imports
-import logData from "../services/vision-service";
+import { logData } from "../services/vision-service";
 
 // Responsive Design
 import {
@@ -60,7 +60,7 @@ const MainScreen = ({ navigation }) => {
     Speech.speak("Please allow app to access camera")
   }
 
-  const _maybeRenderUploadingOverlay = () => {
+  const renderUploadingOverlay = () => {
     if (uploading) {
       return (
         <View>
@@ -70,7 +70,7 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  const _maybeRenderImage = () => {
+  const renderImage = () => {
     if (!image) {
       return;
     }
@@ -182,8 +182,8 @@ const MainScreen = ({ navigation }) => {
           />
         )}
 
-        {_maybeRenderImage()}
-        {_maybeRenderUploadingOverlay()}
+        {renderImage()}
+        {renderUploadingOverlay()}
         <View>
           <TopRowBtnContainer>
             <Pressable onPress={_takePhoto}>
