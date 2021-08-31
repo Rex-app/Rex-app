@@ -12,21 +12,6 @@ const speak = (thingToSay) => {
   Speech.speak(thingToSay);
 };
 
-// useEffect(() => {
-//   async function prepare () {
-//     try {
-//       await SplashScreen.preventAutoHideAsync();
-//       speak("Please sign up to get started, or log in if you have an account");
-//       await new Promise(resolve => setInterval(resolve, 8000)); //BLAH
-//     } catch (e) {
-//       console.log(e);
-//     } finally {
-//       setAppIsReady(true);
-//     }
-//   }
-//   prepare();
-// }, []);
-
  const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync();
