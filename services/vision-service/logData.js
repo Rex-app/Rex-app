@@ -2,6 +2,8 @@ import prescriptionParser from "./prescriptionParser"
 
 export default function logData(googleResponse) {
   if (googleResponse) {
+    // o: consider either writing a comment here explaining or writing a
+    //  function with a very descriptive name and tossing this logic in there
     if (typeof (googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
       return "There was an error. Please retake photo."
     } else {

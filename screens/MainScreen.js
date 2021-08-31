@@ -51,6 +51,7 @@ const MainScreen = ({ navigation }) => {
     })();
   }, []);
 
+  // o: consider modularizing this since you are using it in multiple files
   const speak = (thingToSay) => {
     Speech.speak(thingToSay);
   };
@@ -60,6 +61,7 @@ const MainScreen = ({ navigation }) => {
   }
 
   const renderUploadingOverlay = () => {
+    // o: this conditional makes more sense on the render function below
     if (uploading) {
       return (
         <View>
@@ -70,6 +72,7 @@ const MainScreen = ({ navigation }) => {
   };
 
   const renderImage = () => {
+    // o: this conditional makes more sense in the render function below
     if (!image) {
       return;
     }

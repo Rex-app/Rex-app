@@ -15,6 +15,7 @@ export default async function submitToGoogleVision(setUploading, setGoogleRespon
         },
       ],
     });
+
     let response = await fetch(
       "https://vision.googleapis.com/v1/images:annotate?key=" +
       Environment["GOOGLE_CLOUD_VISION_API_KEY"],

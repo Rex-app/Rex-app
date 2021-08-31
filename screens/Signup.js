@@ -131,6 +131,7 @@ const Signup = ({ navigation }) => {
                 Already have an account?
               </ExtraText>
               <TextLink>
+                {/* o: as a suggestion, consider making these screens into constants */}
                 <TextLinkContent onPress={() => navigation.navigate('Login')}>
                   Log in!
                 </TextLinkContent>
