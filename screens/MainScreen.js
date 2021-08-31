@@ -1,13 +1,12 @@
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from 'expo-speech';
 import { Camera } from "expo-camera";
-import Environment from "../config/environments";
 import firebase from "../config/firebase";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
 
 // Function Imports
-import { logData } from "../services/vision-service";
+import { logData, submitToGoogleVision } from "../services/vision-service";
 
 // Responsive Design
 import {
@@ -86,7 +85,7 @@ const MainScreen = ({ navigation }) => {
         />
         <LongButton
           submit={true}
-          onPress={() => submitToGoogleVision()}
+          onPress={() => submitToGoogleVision(setUploading, setGoogleResponse, image)}
         >
           <Image
             source={require("../assets/submitPhotoButton.png")}
@@ -107,11 +106,10 @@ const MainScreen = ({ navigation }) => {
 
     // Done with blob; close and release it
     blob.close();
-
     return await snapshot.ref.getDownloadURL();
   };
 
-  const _handleImagePicked = async (pickerResult) => {
+  const handleSelectedImage = async (pickerResult) => {
     try {
       setUploading(true);
       if (!pickerResult.cancelled) {
@@ -127,48 +125,12 @@ const MainScreen = ({ navigation }) => {
   };
 
   // Note: aspect only works for Android
-  const _takePhoto = async () => {
+  const takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });
-
-    _handleImagePicked(pickerResult);
-  };
-
-  const submitToGoogleVision = async () => {
-    try {
-      setUploading(true);
-      let body = JSON.stringify({
-        requests: [
-          {
-            features: [{ type: "TEXT_DETECTION", maxResults: 5 }],
-            image: {
-              source: {
-                imageUri: image,
-              },
-            },
-          },
-        ],
-      });
-      let response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=" +
-        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: body,
-        }
-      );
-      let responseJson = await response.json();
-      setGoogleResponse(responseJson);
-      setUploading(false);
-    } catch (error) {
-      console.log(error);
-    }
+    handleSelectedImage(pickerResult);
   };
 
   return (
@@ -181,19 +143,17 @@ const MainScreen = ({ navigation }) => {
             style={{ width: wp('90%'), height: hp('40%') }}
           />
         )}
-
         {renderImage()}
         {renderUploadingOverlay()}
         <View>
           <TopRowBtnContainer>
-            <Pressable onPress={_takePhoto}>
+            <Pressable onPress={takePhoto}>
               <Image
                 source={require("../assets/cameraButton.png")}
                 resizeMode="contain"
                 style={{ width: wp('100%'), height: hp('12%') }}
               />
             </Pressable>
-
             <Pressable onPress={() => speak(logData(googleResponse))}>
               <Image
                 source={require("../assets/playButton.png")}
@@ -202,7 +162,6 @@ const MainScreen = ({ navigation }) => {
               />
             </Pressable>
           </TopRowBtnContainer>
-
           <View>
             <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
               <Image
@@ -219,9 +178,7 @@ const MainScreen = ({ navigation }) => {
               />
             </LongButton>
           </View>
-
         </View>
-
         <StatusBar barStyle="dark-content" />
       </InnerContainer>
     </StyledContainer>
