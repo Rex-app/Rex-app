@@ -1,11 +1,12 @@
 import * as ImagePicker from "expo-image-picker";
 import * as Speech from 'expo-speech';
 import { Camera } from "expo-camera";
-import Environment from "../config/environments";
 import firebase from "../config/firebase";
-import prescriptionParser from "../dummyDataTesting/dataParsingTests";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
+
+// Function Imports
+import { logData, submitToGoogleVision } from "../services/vision-service";
 
 // Responsive Design
 import {
@@ -40,11 +41,8 @@ const MainScreen = ({ navigation }) => {
 
   /*
     useEffect Notes:
-    useEffect() take two parameters a function and an a dependency array
     See: https://stackoverflow.com/questions/58495238/getting-error-after-i-put-async-function-in-useeffect
-        for more info about the function parameter
-    See: https://reactjs.org/docs/hooks-effect.html for more info about the
-        dependency array parameter
+    See: https://reactjs.org/docs/hooks-effect.html
   */
   useEffect(() => {
     (async () => {
@@ -61,7 +59,7 @@ const MainScreen = ({ navigation }) => {
     Speech.speak("Please allow app to access camera")
   }
 
-  const _maybeRenderUploadingOverlay = () => {
+  const renderUploadingOverlay = () => {
     if (uploading) {
       return (
         <View>
@@ -71,37 +69,7 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  const logData = () => {
-    if (googleResponse) {
-      if (typeof (googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
-        return "There was an error. Please retake photo."
-      } else {
-        let prescriptionData = googleResponse;
-        let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-
-        fetch("http://192.168.1.169:5000", {
-          method: "post",
-          body: JSON.stringify(googleResponse),
-          headers: { "Content-Type": "application/json" }
-        });
-
-        const prescriptionInstructions = prescriptionParser(prescriptionData)
-        const myRe = /([A-Z]){4,}/g
-        const textArr = parsedData.match(myRe);
-        const medicationName = textArr.join(' ');
-
-        if (medicationName === undefined) {
-          return "There was an error. Please retake photo."
-        } else {
-          return medicationName + prescriptionInstructions;
-        }
-      }
-    } else {
-      return "There was an error. Please retake photo."
-    }
-  }
-
-  const _maybeRenderImage = () => {
+  const renderImage = () => {
     if (!image) {
       return;
     }
@@ -117,7 +85,7 @@ const MainScreen = ({ navigation }) => {
         />
         <LongButton
           submit={true}
-          onPress={() => submitToGoogleVision()}
+          onPress={() => submitToGoogleVision(setUploading, setGoogleResponse, image)}
         >
           <Image
             source={require("../assets/submitPhotoButton.png")}
@@ -138,11 +106,10 @@ const MainScreen = ({ navigation }) => {
 
     // Done with blob; close and release it
     blob.close();
-
     return await snapshot.ref.getDownloadURL();
   };
 
-  const _handleImagePicked = async (pickerResult) => {
+  const handleSelectedImage = async (pickerResult) => {
     try {
       setUploading(true);
       if (!pickerResult.cancelled) {
@@ -158,48 +125,12 @@ const MainScreen = ({ navigation }) => {
   };
 
   // Note: aspect only works for Android
-  const _takePhoto = async () => {
+  const takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });
-
-    _handleImagePicked(pickerResult);
-  };
-
-  const submitToGoogleVision = async () => {
-    try {
-      setUploading(true);
-      let body = JSON.stringify({
-        requests: [
-          {
-            features: [{ type: "TEXT_DETECTION", maxResults: 5 }],
-            image: {
-              source: {
-                imageUri: image,
-              },
-            },
-          },
-        ],
-      });
-      let response = await fetch(
-        "https://vision.googleapis.com/v1/images:annotate?key=" +
-        Environment["GOOGLE_CLOUD_VISION_API_KEY"],
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          method: "POST",
-          body: body,
-        }
-      );
-      let responseJson = await response.json();
-      setGoogleResponse(responseJson);
-      setUploading(false);
-    } catch (error) {
-      console.log(error);
-    }
+    handleSelectedImage(pickerResult);
   };
 
   return (
@@ -212,20 +143,18 @@ const MainScreen = ({ navigation }) => {
             style={{ width: wp('90%'), height: hp('40%') }}
           />
         )}
-
-        {_maybeRenderImage()}
-        {_maybeRenderUploadingOverlay()}
+        {renderImage()}
+        {renderUploadingOverlay()}
         <View>
           <TopRowBtnContainer>
-            <Pressable onPress={_takePhoto}>
+            <Pressable onPress={takePhoto}>
               <Image
                 source={require("../assets/cameraButton.png")}
                 resizeMode="contain"
                 style={{ width: wp('100%'), height: hp('12%') }}
               />
             </Pressable>
-
-            <Pressable onPress={() => speak(logData())}>
+            <Pressable onPress={() => speak(logData(googleResponse))}>
               <Image
                 source={require("../assets/playButton.png")}
                 resizeMode="contain"
@@ -233,7 +162,6 @@ const MainScreen = ({ navigation }) => {
               />
             </Pressable>
           </TopRowBtnContainer>
-
           <View>
             <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
               <Image
@@ -250,9 +178,7 @@ const MainScreen = ({ navigation }) => {
               />
             </LongButton>
           </View>
-
         </View>
-
         <StatusBar barStyle="dark-content" />
       </InnerContainer>
     </StyledContainer>
