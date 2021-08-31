@@ -77,7 +77,6 @@ const MainScreen = ({ navigation }) => {
         return "There was an error. Please retake photo."
       } else {
         let prescriptionData = googleResponse;
-        // console.log(googleResponse.responses[0])
         let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
 
         fetch("http://192.168.1.169:5000", {
@@ -254,7 +253,7 @@ const MainScreen = ({ navigation }) => {
 
         </View>
 
-        <StatusBar barStyle="default" />
+        <StatusBar barStyle="dark-content" />
       </InnerContainer>
     </StyledContainer>
   );
