@@ -1,9 +1,15 @@
 import firebase from "../config/firebase";
 import { Formik } from "formik";
+import { Image, View } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { View, KeyboardAvoidingView, ScrollView, Keyboard } from "react-native";
 import KeyboardShiftWrapper from '../components/KeyboardShift';
+
+// Responsive Design
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen'
 
 // Component Imports
 import ErrorMessage from "../components/ErrorMessage";
@@ -14,7 +20,6 @@ import {
   ExtraView,
   LeftIcon,
   Line,
-  LoginPageLogo,
   MsgBox,
   RightIcon,
   StyledButton,
@@ -59,66 +64,68 @@ const Login = ({ navigation }) => {
 
   return (
     <KeyboardShiftWrapper>
-    <StyledContainer>
-      <StatusBar style="dark" />
-      <LoginPageLogo
-        resizeMode="contain"
-        source={require("../assets/rexLogoV1.png")}
-      />
-      <SubTitle>Account Login</SubTitle>
-      <Formik
-        initialValues={{ email: '', password: '' }}
-        onSubmit={onLogin}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (<StyledFormArea>
-          <MyTextInput
-            label="Email Address"
-            icon="email"
-            placeholder="rex@rexapp.com"
-            placeholderTextColor={pink}
-            onChangeText={handleChange('email')}
-            onBlur={handleBlur('email')}
-            value={values.email}
-            keyboardType="email-address"
-          />
+      <StyledContainer>
+        <StatusBar style="dark" />
+        <Image
+          resizeMode="contain"
+          justifyContent="flex-end"
+          style={{ width: wp('60%'), height: hp('25%') }}
+          source={require("../assets/rexLogoV1.png")}
+        />
+        <SubTitle>Account Login</SubTitle>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          onSubmit={onLogin}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values }) => (<StyledFormArea>
+            <MyTextInput
+              label="Email Address"
+              icon="email"
+              placeholder="rex@rexapp.com"
+              placeholderTextColor={pink}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              keyboardType="email-address"
+            />
 
-          <MyTextInput
-            label="Password"
-            icon="lock"
-            placeholder="********"
-            placeholderTextColor={pink}
-            onChangeText={handleChange('password')}
-            onBlur={handleBlur('password')}
-            value={values.password}
-            secureTextEntry={hidePassword}
-            isPassword={true}
-            hidePassword={hidePassword}
-            setHidePassword={setHidePassword}
-          />
+            <MyTextInput
+              label="Password"
+              icon="lock"
+              placeholder="********"
+              placeholderTextColor={pink}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              secureTextEntry={hidePassword}
+              isPassword={true}
+              hidePassword={hidePassword}
+              setHidePassword={setHidePassword}
+            />
 
-          <MsgBox>
-            {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
-          </MsgBox>
+            <MsgBox>
+              {loginError ? <ErrorMessage error={loginError} visible={true} /> : null}
+            </MsgBox>
 
-          <StyledButton onPress={handleSubmit}>
-            <ButtonText>
-              Login
-            </ButtonText>
-          </StyledButton>
-          <Line />
-          <ExtraView>
-            <ExtraText>
-              Don't have an account?
-            </ExtraText>
-            <TextLink onPress={() => navigation.navigate('Signup')}>
-              <TextLinkContent>
-                Sign up!
-              </TextLinkContent>
-            </TextLink>
-          </ExtraView>
-        </StyledFormArea>)}
-      </Formik>
-    </StyledContainer>
+            <StyledButton onPress={handleSubmit}>
+              <ButtonText>
+                Login
+              </ButtonText>
+            </StyledButton>
+            <Line />
+            <ExtraView>
+              <ExtraText>
+                Don't have an account?
+              </ExtraText>
+              <TextLink onPress={() => navigation.navigate('Signup')}>
+                <TextLinkContent>
+                  Sign up!
+                </TextLinkContent>
+              </TextLink>
+            </ExtraView>
+          </StyledFormArea>)}
+        </Formik>
+      </StyledContainer>
     </KeyboardShiftWrapper>
   );
 };

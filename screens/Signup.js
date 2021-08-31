@@ -1,6 +1,6 @@
 import firebase from "../config/firebase";
 import { Formik } from "formik";
-import { Pressable, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import KeyboardShiftWrapper from '../components/KeyboardShift';
@@ -28,6 +28,12 @@ import {
   TextLinkContent,
 } from "../components/styles";
 
+// Responsive Design
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen'
+
 // Color imports
 const { pink } = Colors;
 
@@ -40,7 +46,6 @@ const auth = firebase.auth();
 const Signup = ({ navigation }) => {
   const [hidePassword, setHidePassword] = useState(true);
   const [signupError, setSignupError] = useState('');
-
 
   // Registers a user based on their email and password values
   // Values provided by Formik when its onClick is triggered
@@ -59,79 +64,81 @@ const Signup = ({ navigation }) => {
 
   return (
     <KeyboardShiftWrapper>
-    <StyledContainer>
-      <StatusBar style="dark" />
-      <SignupPageLogo
-        resizeMode="contain"
-        source={require("../assets/rexSolo.png")}
-      />
-      <SubTitle>Account Sign-Up</SubTitle>
+      <StyledContainer>
+        <StatusBar style="dark" />
+        <Image
+          resizeMode="contain"
+          justifyContent="flex-end"
+          style={{ width: wp('60%'), height: hp('25%') }}
+          source={require("../assets/rexSolo.png")}
+        />
+        <SubTitle>Account Sign-Up</SubTitle>
 
-      <Formik
-        initialValues={{ email: "", password: "", confirmPassword: "" }}
-        onSubmit={onHandleSignup}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (<StyledFormArea>
-          <MyTextInput
-            label="Email Address"
-            icon="email"
-            placeholder="rex@rexapp.com"
-            placeholderTextColor={pink}
-            onChangeText={handleChange('email')}
-            onBlur={handleBlur('email')}
-            value={values.email}
-            keyboardType="email-address"
-          />
+        <Formik
+          initialValues={{ email: "", password: "", confirmPassword: "" }}
+          onSubmit={onHandleSignup}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values }) => (<StyledFormArea>
+            <MyTextInput
+              label="Email Address"
+              icon="email"
+              placeholder="rex@rexapp.com"
+              placeholderTextColor={pink}
+              onChangeText={handleChange('email')}
+              onBlur={handleBlur('email')}
+              value={values.email}
+              keyboardType="email-address"
+            />
 
-          <MyTextInput
-            label="Password"
-            icon="lock"
-            placeholder="********"
-            placeholderTextColor={pink}
-            onChangeText={handleChange('password')}
-            onBlur={handleBlur('password')}
-            value={values.password}
-            secureTextEntry={hidePassword}
-            isPassword={true}
-            hidePassword={hidePassword}
-            setHidePassword={setHidePassword}
-          />
+            <MyTextInput
+              label="Password"
+              icon="lock"
+              placeholder="********"
+              placeholderTextColor={pink}
+              onChangeText={handleChange('password')}
+              onBlur={handleBlur('password')}
+              value={values.password}
+              secureTextEntry={hidePassword}
+              isPassword={true}
+              hidePassword={hidePassword}
+              setHidePassword={setHidePassword}
+            />
 
-          <MyTextInput
-            label="Confirm Password"
-            icon="lock"
-            placeholder="********"
-            placeholderTextColor={pink}
-            onChangeText={handleChange('confirmPassword')}
-            onBlur={handleBlur('confirmPassword')}
-            value={values.password}
-            secureTextEntry={hidePassword}
-            isPassword={true}
-            hidePassword={hidePassword}
-            setHidePassword={setHidePassword}
-          />
+            <MyTextInput
+              label="Confirm Password"
+              icon="lock"
+              placeholder="********"
+              placeholderTextColor={pink}
+              onChangeText={handleChange('confirmPassword')}
+              onBlur={handleBlur('confirmPassword')}
+              value={values.password}
+              secureTextEntry={hidePassword}
+              isPassword={true}
+              hidePassword={hidePassword}
+              setHidePassword={setHidePassword}
+            />
 
-          <MsgBox>...</MsgBox>
-          {signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
-          <StyledButton onPress={handleSubmit}>
-            <ButtonText>
-              Sign-Up
-            </ButtonText>
-          </StyledButton>
-          <Line />
-          <ExtraView>
-            <ExtraText>
-              Already have an account?
-            </ExtraText>
-            <TextLink>
-              <TextLinkContent onPress={() => navigation.navigate('Login')}>
-                Log in!
-              </TextLinkContent>
-            </TextLink>
-          </ExtraView>
-        </StyledFormArea>)}
-      </Formik>
-    </StyledContainer>
+            <MsgBox>...</MsgBox>
+            {signupError ? <ErrorMessage error={signupError} visible={true} /> : null}
+            <StyledButton onPress={handleSubmit}>
+              <ButtonText>
+                Sign-Up
+              </ButtonText>
+            </StyledButton>
+            <Line />
+            <ExtraView>
+              <ExtraText>
+                Already have an account?
+              </ExtraText>
+              <TextLink>
+                <TextLinkContent onPress={() => navigation.navigate('Login')}>
+                  Log in!
+                </TextLinkContent>
+              </TextLink>
+            </ExtraView>
+          </StyledFormArea>)}
+        </Formik>
+      </StyledContainer>
     </KeyboardShiftWrapper>
   );
 };
