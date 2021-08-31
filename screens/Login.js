@@ -1,9 +1,10 @@
 import firebase from "../config/firebase";
 import { Formik } from "formik";
 import { Image, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import KeyboardShiftWrapper from '../components/KeyboardShift';
+import * as Speech from 'expo-speech';
 
 // Responsive Design
 import {
@@ -46,6 +47,20 @@ const Login = ({ navigation }) => {
   // Screen's State
   const [hidePassword, setHidePassword] = useState(true);
   const [loginError, setLoginError] = useState('');
+  const speak = (thingToSay) => {
+    Speech.speak(thingToSay);
+  };
+
+  useEffect(() => {
+    async function spokenInstruction() {
+      try {
+        await speak("Please sign up to get started, or log in if you have an account");
+      } catch (e){
+        console.log(e);
+      }
+    }
+    spokenInstruction();
+  }, []);
 
   // Handles whether to log in the user based on their email and password values
   // Values provided by Formik when its onClick is triggered

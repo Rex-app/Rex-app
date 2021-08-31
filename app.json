@@ -3,15 +3,13 @@
     "name": "rexapp",
     "slug": "rexapp",
     "version": "1.0.0",
+    "splash": {
+      "image": "./assets/rexLogoLinesWide.png",
+      "resizeMode": "contain"
+    },
     "assetBundlePatterns": [
       "**/*"
     ]
-  },
-  "ios" : {
-    "splash": {
-      "image": "./assets/rexLogoLinesWide.png",
-      "resizeMode": "cover"
-    }
-  },
+    },
   "name": "rexapp"
 }
