@@ -4,26 +4,28 @@ import { Camera } from "expo-camera";
 import Environment from "../config/environments";
 import firebase from "../config/firebase";
 import prescriptionParser from "../dummyDataTesting/dataParsingTests";
-import { Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
+
+// Responsive Design
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen'
 
 // Native component imports
 import {
   ActivityIndicator,
   Image,
+  Pressable,
   StatusBar,
   View,
 } from "react-native";
 
 // Styled component imports
 import {
-  BottomRowBtnContainer,
-  CapturedImageContainer,
-  ExternalButtonContainer,
   InnerContainer,
   LongButton,
-  PlaceHolderImg,
   StyledContainer,
   TopRowBtnContainer,
 } from "../components/styles";
@@ -34,6 +36,7 @@ const MainScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [googleResponse, setGoogleResponse] = useState(null);
+  const [hasPermission, setHasPermission] = useState(null)
 
   /*
     useEffect Notes:
@@ -46,8 +49,17 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       await Camera.requestPermissionsAsync();
+      setHasPermission(true)
     })();
   }, []);
+
+  const speak = (thingToSay) => {
+    Speech.speak(thingToSay);
+  };
+
+  if (hasPermission === null) {
+    Speech.speak("Please allow app to access camera")
+  }
 
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
@@ -61,20 +73,31 @@ const MainScreen = ({ navigation }) => {
 
   const logData = () => {
     if (googleResponse) {
-      let prescriptionData = googleResponse;
-      let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-      fetch("http://192.168.1.169:5000", {
-        method: "post",
-        body: JSON.stringify(googleResponse),
-        headers: { "Content-Type": "application/json" }
-      });
+      if (typeof (googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
+        return "There was an error. Please retake photo."
+      } else {
+        let prescriptionData = googleResponse;
+        let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
 
-      const prescriptionInstructions = prescriptionParser(prescriptionData)
-      const myRe = /([A-Z]){4,}/g
-      const textArr = parsedData.match(myRe);
-      const medicationName = textArr.join(' ');
+        fetch("http://192.168.1.169:5000", {
+          method: "post",
+          body: JSON.stringify(googleResponse),
+          headers: { "Content-Type": "application/json" }
+        });
 
-      return medicationName + prescriptionInstructions;
+        const prescriptionInstructions = prescriptionParser(prescriptionData)
+        const myRe = /([A-Z]){4,}/g
+        const textArr = parsedData.match(myRe);
+        const medicationName = textArr.join(' ');
+
+        if (medicationName === undefined) {
+          return "There was an error. Please retake photo."
+        } else {
+          return medicationName + prescriptionInstructions;
+        }
+      }
+    } else {
+      return "There was an error. Please retake photo."
     }
   }
 
@@ -86,14 +109,21 @@ const MainScreen = ({ navigation }) => {
       <View style={{
         alignItems: "center",
         justifyContent: "center",
-        paddingTop: 50,
       }}>
-        <PlaceHolderImg source={{ uri: image }} />
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          style={{ width: wp('90%'), height: hp('40%') }}
+        />
         <LongButton
           submit={true}
           onPress={() => submitToGoogleVision()}
         >
-          <Image source={require("../assets/submitPhotoButton.png")} />
+          <Image
+            source={require("../assets/submitPhotoButton.png")}
+            resizeMode="contain"
+            style={{ width: wp('90%'), height: hp('8%') }}
+          />
         </LongButton>
       </View>
     );
@@ -172,46 +202,58 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  //needs 'text' variable from JSON body of text from image
-  const speak = (thingToSay) => {
-    Speech.speak(thingToSay);
-  };
-
   return (
     <StyledContainer>
       <InnerContainer>
-        <CapturedImageContainer>
-          {image ? null : (
-            <PlaceHolderImg source={require("../assets/pillBottle.png")} />
-          )}
+        {image ? null : (
+          <Image
+            source={require("../assets/pillBottle.png")}
+            resizeMode="contain"
+            style={{ width: wp('90%'), height: hp('40%') }}
+          />
+        )}
 
-          {_maybeRenderImage()}
-          {_maybeRenderUploadingOverlay()}
-        </CapturedImageContainer>
-
-        <ExternalButtonContainer>
+        {_maybeRenderImage()}
+        {_maybeRenderUploadingOverlay()}
+        <View>
           <TopRowBtnContainer>
             <Pressable onPress={_takePhoto}>
-              <Image source={require("../assets/cameraButton.png")} />
+              <Image
+                source={require("../assets/cameraButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('100%'), height: hp('12%') }}
+              />
             </Pressable>
 
             <Pressable onPress={() => speak(logData())}>
-              <Image source={require("../assets/playButton.png")} />
+              <Image
+                source={require("../assets/playButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('90%'), height: hp('12%') }}
+              />
             </Pressable>
           </TopRowBtnContainer>
 
-          <BottomRowBtnContainer>
+          <View>
             <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
-              <Image source={require("../assets/instructionsButton.png")} />
+              <Image
+                source={require("../assets/instructionsButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('90%'), height: hp('8%') }}
+              />
             </LongButton>
-            <LongButton onPress={() => navigation.navigate('Settings')} >
-              <Image source={require("../assets/settingsButton.png")} />
+            <LongButton onPress={() => navigation.navigate('Settings')}>
+              <Image
+                source={require("../assets/settingsButton.png")}
+                resizeMode="contain"
+                style={{ width: wp('90%'), height: hp('8%') }}
+              />
             </LongButton>
-          </BottomRowBtnContainer>
+          </View>
 
-        </ExternalButtonContainer>
+        </View>
 
-        <StatusBar barStyle="default" />
+        <StatusBar barStyle="dark-content" />
       </InnerContainer>
     </StyledContainer>
   );
