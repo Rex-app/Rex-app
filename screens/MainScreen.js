@@ -3,9 +3,11 @@ import * as Speech from 'expo-speech';
 import { Camera } from "expo-camera";
 import Environment from "../config/environments";
 import firebase from "../config/firebase";
-import prescriptionParser from "../dummyDataTesting/dataParsingTests";
 import React, { useEffect, useState } from "react";
 import uuid from "uuid";
+
+// Function Imports
+import logData from "../services/vision-service";
 
 // Responsive Design
 import {
@@ -40,11 +42,8 @@ const MainScreen = ({ navigation }) => {
 
   /*
     useEffect Notes:
-    useEffect() take two parameters a function and an a dependency array
     See: https://stackoverflow.com/questions/58495238/getting-error-after-i-put-async-function-in-useeffect
-        for more info about the function parameter
-    See: https://reactjs.org/docs/hooks-effect.html for more info about the
-        dependency array parameter
+    See: https://reactjs.org/docs/hooks-effect.html
   */
   useEffect(() => {
     (async () => {
@@ -70,36 +69,6 @@ const MainScreen = ({ navigation }) => {
       );
     }
   };
-
-  const logData = () => {
-    if (googleResponse) {
-      if (typeof (googleResponse.responses[0]) === "object" && Array.isArray(googleResponse.responses) && (Object.keys(googleResponse.responses[0]))[0] === undefined) {
-        return "There was an error. Please retake photo."
-      } else {
-        let prescriptionData = googleResponse;
-        let parsedData = JSON.stringify(googleResponse.responses[0].textAnnotations[0].description)
-
-        fetch("http://192.168.1.169:5000", {
-          method: "post",
-          body: JSON.stringify(googleResponse),
-          headers: { "Content-Type": "application/json" }
-        });
-
-        const prescriptionInstructions = prescriptionParser(prescriptionData)
-        const myRe = /([A-Z]){4,}/g
-        const textArr = parsedData.match(myRe);
-        const medicationName = textArr.join(' ');
-
-        if (medicationName === undefined) {
-          return "There was an error. Please retake photo."
-        } else {
-          return medicationName + prescriptionInstructions;
-        }
-      }
-    } else {
-      return "There was an error. Please retake photo."
-    }
-  }
 
   const _maybeRenderImage = () => {
     if (!image) {
@@ -225,7 +194,7 @@ const MainScreen = ({ navigation }) => {
               />
             </Pressable>
 
-            <Pressable onPress={() => speak(logData())}>
+            <Pressable onPress={() => speak(logData(googleResponse))}>
               <Image
                 source={require("../assets/playButton.png")}
                 resizeMode="contain"
