@@ -22,6 +22,9 @@ export default function prescriptionParser(prescriptionData) {
   for (const word of txtAnnotationsArr) {
     filteredData[word.description] = word.boundingPoly.vertices;
   }
+
+  let capsWords = [];
+  capsWords = summaryDescArr.filter((line) => (line === line.toUpperCase()));
   //loop through summaryDescApp
   //split each element by ' '
   let yCoordinates = [];
@@ -52,7 +55,7 @@ export default function prescriptionParser(prescriptionData) {
 
   let result = sortedSummaryDescArr.splice(trueValue);
   result = result.join(" ");
-  return result;
+  return capsWords + result;
 }
 
 // HELPER FUNCTIONS
