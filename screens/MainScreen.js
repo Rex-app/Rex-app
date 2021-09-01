@@ -47,7 +47,8 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       await Camera.requestPermissionsAsync();
-      setHasPermission(true)
+      setHasPermission(true);
+      Speech.speak("Press the blue camera button to take a photo. Then press submit photo. Press the purple play button to replay the information from the bottle.")
     })();
   }, []);
 
@@ -158,7 +159,7 @@ const MainScreen = ({ navigation }) => {
             </Pressable>
           </TopRowBtnContainer>
           <View>
-            <LongButton onPress={() => speak("Press the blue camera button to take a photo. Press the purple play button to replay the information from the bottle.")}>
+            <LongButton onPress={() => speak("Press the blue camera button to take a photo. Then press submit photo. Press the purple play button to replay the information from the bottle.")}>
               <Image
                 source={require("../assets/instructionsButton.png")}
                 resizeMode="contain"
