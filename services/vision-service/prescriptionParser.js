@@ -1,3 +1,17 @@
+// Data parsing explaination:
+//The way google works is it detects words, draws a bounding box around the word  and gives x and y axis for each word. 4 in total.
+// google combines the words that occurs in the same line
+//every line is separated by a new line delimeter. However those lines are not in the same order as they are in the picture.
+// our job was to sort those line in the same order as how they are in the picture
+// first we got the complete description from the data that google gave us
+//then we split the description by a new line delimeter and got an array of each line as element
+//that way we know what words are on each line
+// in filtered data every word detected by google is the key and its location is value
+//then we got the maximum y of that line (we push that into an empty array so that we have max y for each line )
+//Now we have two arrays. One that has the lines and another has max y for each line
+// we sort the max y array and get the INDEX of the sorted array using arg sort
+// we then take the sortedSummaryDescArr and print elements after the word TAKE
+
 export default function prescriptionParser(prescriptionData) {
   const txtAnnotationsArr = prescriptionData.responses[0].textAnnotations;
 
