@@ -60,19 +60,14 @@ const MainScreen = ({ navigation }) => {
   }
 
   const renderUploadingOverlay = () => {
-    if (uploading) {
-      return (
-        <View>
-          <ActivityIndicator color="#000" animating size="large" />
-        </View>
-      );
-    }
+    return (
+      <View>
+        <ActivityIndicator color="#000" animating size="large" />
+      </View>
+    );
   };
 
   const renderImage = () => {
-    if (!image) {
-      return;
-    }
     return (
       <View style={{
         alignItems: "center",
@@ -143,8 +138,8 @@ const MainScreen = ({ navigation }) => {
             style={{ width: wp('90%'), height: hp('40%') }}
           />
         )}
-        {renderImage()}
-        {renderUploadingOverlay()}
+        {!image ? null : renderImage()}
+        {uploading ? renderUploadingOverlay() : null}
         <View>
           <TopRowBtnContainer>
             <Pressable onPress={takePhoto}>
