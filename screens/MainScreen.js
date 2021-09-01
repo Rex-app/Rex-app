@@ -48,7 +48,7 @@ const MainScreen = ({ navigation }) => {
     (async () => {
       await Camera.requestPermissionsAsync();
       setHasPermission(true);
-      // Speech.speak("Press the blue camera button to take a photo. Then press submit photo. Press the purple play button to replay the information from the bottle.")
+      Speech.speak("Press the blue camera button to take a photo. Then press submit photo. Finally, press the purple play button to replay the information from the bottle.")
     })();
   }, []);
 
@@ -147,14 +147,14 @@ const MainScreen = ({ navigation }) => {
               <Image
                 source={require("../assets/cameraButton.png")}
                 resizeMode="contain"
-                style={{ width: wp('100%'), height: hp('12%') }}
+                style={{ width: wp('35%'), height: hp('12%'), backgroundColor: "red" }}
               />
             </Pressable>
             <Pressable onPress={() => speak(logData(googleResponse))}>
               <Image
                 source={require("../assets/playButton.png")}
                 resizeMode="contain"
-                style={{ width: wp('90%'), height: hp('12%') }}
+                style={{ width: wp('30%'), height: hp('12%'), backgroundColor: "green" }}
               />
             </Pressable>
           </TopRowBtnContainer>
