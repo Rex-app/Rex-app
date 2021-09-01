@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import * as Speech from 'expo-speech';
+import * as Speech from "expo-speech";
 import { Camera } from "expo-camera";
 import firebase from "../config/firebase";
 import React, { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import { logData, submitToGoogleVision } from "../services/vision-service";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
-} from 'react-native-responsive-screen'
+} from "react-native-responsive-screen";
 
 // Native component imports
 import {
@@ -37,7 +37,7 @@ const MainScreen = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [googleResponse, setGoogleResponse] = useState(null);
-  const [hasPermission, setHasPermission] = useState(null)
+  const [hasPermission, setHasPermission] = useState(null);
 
   /*
     useEffect Notes:
@@ -46,9 +46,11 @@ const MainScreen = ({ navigation }) => {
   */
   useEffect(() => {
     (async () => {
-      await Camera.requestPermissionsAsync();
-      setHasPermission(true);
-      Speech.speak("Press the blue camera button to take a photo. Then press submit photo. Finally, press the purple play button to replay the information from the bottle.")
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+      Speech.speak(
+        "Press the blue camera button to take a photo. Then press submit photo. Finally, press the purple play button to replay the information from the bottle."
+      );
     })();
   }, []);
 
@@ -56,8 +58,8 @@ const MainScreen = ({ navigation }) => {
     Speech.speak(thingToSay);
   };
 
-  if (hasPermission === null) {
-    Speech.speak("Please allow app to access camera")
+  if (hasPermission === false) {
+    Speech.speak("Please allow app to access camera");
   }
 
   const renderUploadingOverlay = () => {
@@ -70,23 +72,27 @@ const MainScreen = ({ navigation }) => {
 
   const renderImage = () => {
     return (
-      <View style={{
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Image
           source={{ uri: image }}
           resizeMode="contain"
-          style={{ width: wp('90%'), height: hp('40%') }}
+          style={{ width: wp("90%"), height: hp("40%") }}
         />
         <LongButton
           submit={true}
-          onPress={() => submitToGoogleVision(setUploading, setGoogleResponse, image)}
+          onPress={() =>
+            submitToGoogleVision(setUploading, setGoogleResponse, image)
+          }
         >
           <Image
             source={require("../assets/submitPhotoButton.png")}
             resizeMode="contain"
-            style={{ width: wp('90%'), height: hp('8%') }}
+            style={{ width: wp("90%"), height: hp("8%") }}
           />
         </LongButton>
       </View>
@@ -136,7 +142,7 @@ const MainScreen = ({ navigation }) => {
           <Image
             source={require("../assets/pillBottle.png")}
             resizeMode="contain"
-            style={{ width: wp('90%'), height: hp('40%') }}
+            style={{ width: wp("90%"), height: hp("40%") }}
           />
         )}
         {!image ? null : renderImage()}
@@ -147,30 +153,36 @@ const MainScreen = ({ navigation }) => {
               <Image
                 source={require("../assets/cameraButton.png")}
                 resizeMode="contain"
-                style={{ width: wp('35%'), height: hp('12%') }}
+                style={{ width: wp("35%"), height: hp("12%") }}
               />
             </Pressable>
             <Pressable onPress={() => speak(logData(googleResponse))}>
               <Image
                 source={require("../assets/playButton.png")}
                 resizeMode="contain"
-                style={{ width: wp('30%'), height: hp('12%') }}
+                style={{ width: wp("30%"), height: hp("12%") }}
               />
             </Pressable>
           </TopRowBtnContainer>
           <View>
-            <LongButton onPress={() => speak("Press the blue camera button to take a photo. Then press submit photo. Press the purple play button to replay the information from the bottle.")}>
+            <LongButton
+              onPress={() =>
+                speak(
+                  "Press the blue camera button to take a photo. Then press submit photo. Press the purple play button to replay the information from the bottle."
+                )
+              }
+            >
               <Image
                 source={require("../assets/instructionsButton.png")}
                 resizeMode="contain"
-                style={{ width: wp('90%'), height: hp('8%') }}
+                style={{ width: wp("90%"), height: hp("8%") }}
               />
             </LongButton>
-            <LongButton onPress={() => navigation.navigate('Settings')}>
+            <LongButton onPress={() => navigation.navigate("Settings")}>
               <Image
                 source={require("../assets/settingsButton.png")}
                 resizeMode="contain"
-                style={{ width: wp('90%'), height: hp('8%') }}
+                style={{ width: wp("90%"), height: hp("8%") }}
               />
             </LongButton>
           </View>
