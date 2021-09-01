@@ -55,7 +55,11 @@ export default function prescriptionParser(prescriptionData) {
 
   let result = sortedSummaryDescArr.splice(trueValue);
   result = result.join(" ");
-  return capsWords + result;
+  if (Array.isArray(capsWords) && capsWords[0] === null) {
+   return "There was an error. Please retake photo."
+  } else {
+    return `${capsWords}". "${result}`
+  }
 }
 
 // HELPER FUNCTIONS

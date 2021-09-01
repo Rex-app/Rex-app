@@ -25,7 +25,7 @@ export default function logData(googleResponse) {
   } else {
     return "There was an error. Please retake photo."
   }
-};
+}
 
 //find first word in all caps -- medication name 
 //use prescription parser to find everything in that box
