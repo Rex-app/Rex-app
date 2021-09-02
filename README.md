@@ -1,6 +1,6 @@
 # Rex App
 
-An iOS mobile app designed to aide those who are visually impaired read their prescription bottles. Sign up or log in and then simply scan a photo of said prescription bottle.
+An iOS mobile app designed to aide those who are visually impaired read their prescription bottles. Sign up or log in and then simply scan a photo of said prescription bottle to have your prescription read out loud.
 
 <img src="assets/rexLogoV3.png">
 
