@@ -25,3 +25,11 @@ Download on Expo Go using our QR code.
 
 
 Special thanks to Dennese Sanay and Orlando Caraballo for their guidance.
+
+## The App
+Check out a demo of the app here: https://youtu.be/8-wOLyMvtgo.
+<img src="https://i.imgur.com/hwkZ62W.png" />
+<img src="https://i.imgur.com/UTW17aE.png" />
+<img src="https://i.imgur.com/9V87wfw.png" />
+<img src="https://i.imgur.com/GMkO5Za.png" />
+<img src="https://i.imgur.com/TErBDHS.png" />
